@@ -1,0 +1,10 @@
+r2<-function(obj){
+  rss<-sum(resid(obj)^2)
+  dep<-fitted(obj)+resid(obj)
+  tss<-sum((mean(dep)-dep)^2)
+  r2<-1-rss/tss
+  n<-length(dep)
+  p<-length(coef(obj))
+  r2adj<-1-(n-1)/(n-p)*(1-r2)
+  return(c(r2,r2adj))
+}
