@@ -154,3 +154,117 @@ ggplot(anthocyanins,
   geom_point()+geom_line(data=ant.pred,aes(x=tiempo,y=concentration,col=grouping))+
   xlab("Storage Time [Days]")+ylab("Concentration [mg/100mL]")
 ggsave(filename="Figure1.pdf")
+
+
+# Predicciones antocianos ----
+
+
+# model : ant.fm3
+
+#read the data
+presiones1.1_pred <- read.csv("data/presiones1.csv", sep = ";", dec = ",")
+presiones.l_pred <- gather(presiones1.1_pred, compound, concentration,Delphinidin.3.O.sambubioside.5.O.glucoside:Ac.Dehidroascorbico,factor_key=TRUE)
+
+# generate temperature 
+presiones.l_pred$Temp<-factor(substr(presiones.l_pred$X,0,3))
+levels(presiones.l_pred$Temp)<-c(20,4,20,4,20,4)
+presiones.l_pred$Temp<-as.numeric(as.character(presiones.l_pred$Temp))
+
+#create factors for covariate modelling
+presiones.l_pred$sweetener<-factor(presiones.l_pred$sweetener)
+presiones.l_pred$processing<-factor(presiones.l_pred$processing)
+presiones.l_pred$rep<-factor(presiones.l_pred$rep)
+presiones.l_pred$compound<-factor(presiones.l_pred$compound,ordered=F)
+
+# select anthocyanins
+anthocyanins_pred <- presiones.l_pred[which(presiones.l_pred$compound %in% c("Delphinidin.3.O.sambubioside.5.O.glucoside",	
+                                                              "Delphinidin.3.5.O.diglucoside",
+                                                              "Cyanidin.3.O.sambubioside.5.O.glucoside...Cyanidin.3.5.O.diglucoside",	
+                                                              "Delphinidin.3.O.sambubioside",	"Delphinidin.3.O.glucoside",	
+                                                              "Cyanidin.3.O.sambubioside..Cyanidin.3.O.glucoside")),]
+
+
+ant.fm0_pred <-gnls(concentration~Cinf+(C0-Cinf)*exp(-exp(lk-Ea/8.314e-3*(1/(Temp+273)-1/(16+273)))*tiempo),
+              data=anthocyanins_pred,
+              param=list(C0~compound,
+                         Cinf~compound,
+                         lk~compound,
+                         Ea~compound),
+              start=c(C0=c(1,rep(0.001,5)),
+                      Cinf=c(0,rep(0.001,5)),
+                      lk=c(0.01,rep(0.001,5)),
+                      Ea=c(10,rep(0.001,5)))
+)
+
+
+
+ant.fm3_pred<-gnls(concentration~Cinf+(C0-Cinf)*exp(-exp(lk-Ea/8.314e-3*(1/(Temp+273)-1/(16+273)))*tiempo),
+              data=anthocyanins_pred,
+              param=list(C0~compound+compound:sweetener+compound:processing,
+                         Cinf~compound+compound:sweetener+compound:processing,
+                         lk~compound+compound:sweetener+compound:processing,
+                         Ea~compound),
+              start=c(C0=c(coef(ant.fm0_pred)[1:6],rep(0.001,18)),
+                      Cinf=c(coef(ant.fm0_pred)[7:12],rep(0.001,18)),
+                      lk=c(coef(ant.fm0_pred)[13:18],rep(0.001,18)),
+                      Ea=c(coef(ant.fm0_pred)[13:18])
+              )
+)
+
+
+anova(ant.fm0_pred, ant.fm3_pred)
+r2(ant.fm3_pred)
+# diagnostic plots
+plot(ant.fm3_pred)
+qqnorm(ant.fm3_pred)
+plot(ant.fm3_pred,resid(.)~Temp)
+plot(ant.fm3_pred,compound~resid(.))
+plot(ant.fm3_pred,processing~resid(.))
+plot(ant.fm3_pred,sweetener~resid(.))
+
+# a nice table, maybe
+list.of.compound.fit<-list()
+list.of.r2adj<-list()
+for (i in levels(factor(anthocyanins_pred$compound))){
+  print(i)
+  list.of.compound.fit[[i]]<-gnls(concentration~Cinf+(C0-Cinf)*exp(-exp(lk-Ea/8.314e-3*(1/(Temp+273)-1/(16+273)))*tiempo),
+                                  data=subset(anthocyanins_pred,compound==i),
+                                  param=list(C0~sweetener+processing,
+                                             Cinf~sweetener+processing,
+                                             lk~sweetener+processing,
+                                             Ea~1),
+                                  start=c(C0=c(5.05,rep(0.001,3)),
+                                          Cinf=c(0,rep(0.001,3)),
+                                          lk=c(-4.38,rep(0.001,3)),
+                                          Ea=c(67)
+                                  )
+  )
+  list.of.r2adj[[i]]<-round(r2(list.of.compound.fit[[i]])[2],3)
+}
+
+screenreg(list.of.compound.fit,single.row=T,ci.force=T)
+
+htmlreg(list.of.compound.fit,single.row=T,ci.force=T,
+        groups=list("C0 [mg/100mL]"=1:4,"Cinf [mg/100mL]"=5:8,"ln(k) [1/min]"=9:12,"Ea [KJ/Mol/K]"=13),
+        custom.gof.rows=list("R2adj"=list.of.r2adj),
+        file="anthocyanins_pred.html",
+        caption.above=T,
+        caption="Table X. Comparison of the apparent first order kinetic parameters and effects of processing and sweetener used",)
+
+# Figure of Predictions
+# first order apparent plot  to study the importance of Temperature
+anthocyanins_pred$grouping<-with(anthocyanins_pred,sweetener:processing:factor(Temp))
+ant.pred<-expand.grid(tiempo=seq(0,90,length=50),
+                      compound=levels(factor(anthocyanins_pred$compound)),
+                      grouping=levels(factor(anthocyanins_pred$grouping))
+)
+
+ant.pred$sweetener<-factor(with(ant.pred,substr(grouping,0,2)))
+ant.pred$processing<-factor(with(ant.pred,substr(grouping,4,4)))
+ant.pred$Temp<-as.numeric(with(ant.pred,substr(grouping,6,8)))
+ant.pred$concentration<-predict(ant.fm3_pred,newdata = ant.pred)
+ggplot(data=ant.pred,aes(x=tiempo,y=concentration,col=grouping)) +
+  facet_wrap(compound~.,scales="free")+
+  geom_line()+
+  xlab("Storage Time [Days]")+ylab("Concentration [mg/100mL]")
+ggsave(filename="Figure1_pred.pdf")
