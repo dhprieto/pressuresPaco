@@ -4,10 +4,6 @@
 %
 \documentclass[
 ]{article}
-\title{FirstModelsPressuresPaco}
-\author{}
-\date{\vspace{-2.5em}}
-
 \usepackage{amsmath,amssymb}
 \usepackage{lmodern}
 \usepackage{iftex}
@@ -37,13 +33,6 @@
   \KOMAoptions{parskip=half}}
 \makeatother
 \usepackage{xcolor}
-\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
-\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
-\hypersetup{
-  pdftitle={FirstModelsPressuresPaco},
-  hidelinks,
-  pdfcreator={LaTeX via pandoc}}
-\urlstyle{same} % disable monospaced font for URLs
 \usepackage[margin=1in]{geometry}
 \usepackage{color}
 \usepackage{fancyvrb}
@@ -108,6 +97,17 @@
 \ifLuaTeX
   \usepackage{selnolig}  % disable illegal ligatures
 \fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same} % disable monospaced font for URLs
+\hypersetup{
+  pdftitle={FirstModelsPressuresPaco},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{FirstModelsPressuresPaco}
+\author{}
+\date{\vspace{-2.5em}}
 
 \begin{document}
 \maketitle
@@ -403,42 +403,10 @@ datos del experimento en puntos:
 \newpage
 \begin{landscape}
 
-\begin{table}
-\caption{Table X. Comparison of the apparent first order kinetic parameters and effects of processing and sweetener used}
-\begin{center}
-\begin{tabular}{l c c c c c c}
-\hline
- & Delphinidin.3.O.sambubioside.5.O.glucoside & Delphinidin.3.5.O.diglucoside & Cyanidin.3.O.sambubioside.5.O.glucoside...Cyanidin.3.5.O.diglucoside & Delphinidin.3.O.sambubioside & Delphinidin.3.O.glucoside & Cyanidin.3.O.sambubioside..Cyanidin.3.O.glucoside \\
-\hline
-C0 [mg/100mL]          &                               &                               &                               &                               &                               &                               \\
-\quad C0.(Intercept)   & $5.14 \; [ 5.04;  5.25]^{*}$  & $4.12 \; [ 3.98;  4.26]^{*}$  & $2.21 \; [ 2.17;  2.24]^{*}$  & $1.56 \; [ 1.52;  1.60]^{*}$  & $3.86 \; [ 3.76;  3.95]^{*}$  & $1.37 \; [ 1.34;  1.40]^{*}$  \\
-\quad C0.sweetenerSU   & $-0.07 \; [-0.17;  0.04]$     & $-0.17 \; [-0.32; -0.02]^{*}$ & $-0.07 \; [-0.11; -0.03]^{*}$ & $-0.07 \; [-0.12; -0.03]^{*}$ & $-0.23 \; [-0.34; -0.13]^{*}$ & $-0.06 \; [-0.09; -0.02]^{*}$ \\
-\quad C0.processing2   & $-0.05 \; [-0.17;  0.08]$     & $0.05 \; [-0.14;  0.23]$      & $-0.03 \; [-0.08;  0.01]$     & $0.00 \; [-0.05;  0.05]$      & $0.03 \; [-0.10;  0.16]$      & $0.01 \; [-0.03;  0.05]$      \\
-\quad C0.processingP   & $0.03 \; [-0.09;  0.16]$      & $0.97 \; [ 0.80;  1.15]^{*}$  & $0.11 \; [ 0.06;  0.15]^{*}$  & $-0.06 \; [-0.10; -0.01]^{*}$ & $0.36 \; [ 0.24;  0.48]^{*}$  & $0.01 \; [-0.04;  0.05]$      \\
-Cinf [mg/100mL]        &                               &                               &                               &                               &                               &                               \\
-\quad Cinf.(Intercept) & $3.43 \; [ 2.88;  3.98]^{*}$  & $0.50 \; [-0.01;  1.01]$      & $1.15 \; [ 0.86;  1.43]^{*}$  & $-0.53 \; [-0.85; -0.21]^{*}$ & $-0.89 \; [-1.44; -0.34]^{*}$ & $-0.37 \; [-0.55; -0.19]^{*}$ \\
-\quad Cinf.sweetenerSU & $-2.30 \; [-2.88; -1.73]^{*}$ & $0.77 \; [ 0.30;  1.23]^{*}$  & $-0.67 \; [-0.96; -0.38]^{*}$ & $0.56 \; [ 0.25;  0.86]^{*}$  & $1.18 \; [ 0.67;  1.69]^{*}$  & $0.49 \; [ 0.33;  0.65]^{*}$  \\
-\quad Cinf.processing2 & $-2.48 \; [-3.12; -1.83]^{*}$ & $0.90 \; [ 0.42;  1.38]^{*}$  & $-0.73 \; [-1.03; -0.43]^{*}$ & $0.64 \; [ 0.33;  0.94]^{*}$  & $1.30 \; [ 0.78;  1.81]^{*}$  & $0.53 \; [ 0.37;  0.70]^{*}$  \\
-\quad Cinf.processingP & $-0.00 \; [-0.34;  0.34]$     & $-0.32 \; [-0.64;  0.01]$     & $-0.20 \; [-0.35; -0.04]^{*}$ & $0.07 \; [-0.07;  0.22]$      & $-0.10 \; [-0.36;  0.17]$     & $0.03 \; [-0.07;  0.12]$      \\
-ln(k) [1/min]          &                               &                               &                               &                               &                               &                               \\
-\quad lk.(Intercept)   & $-2.96 \; [-3.37; -2.55]^{*}$ & $-3.67 \; [-4.05; -3.28]^{*}$ & $-3.18 \; [-3.50; -2.87]^{*}$ & $-4.50 \; [-4.88; -4.12]^{*}$ & $-4.17 \; [-4.47; -3.88]^{*}$ & $-4.38 \; [-4.67; -4.10]^{*}$ \\
-\quad lk.sweetenerSU   & $-0.84 \; [-1.20; -0.49]^{*}$ & $0.55 \; [ 0.16;  0.94]^{*}$  & $-0.49 \; [-0.75; -0.23]^{*}$ & $0.64 \; [ 0.22;  1.06]^{*}$  & $0.64 \; [ 0.33;  0.96]^{*}$  & $0.76 \; [ 0.45;  1.07]^{*}$  \\
-\quad lk.processing2   & $-0.96 \; [-1.34; -0.58]^{*}$ & $0.70 \; [ 0.27;  1.13]^{*}$  & $-0.58 \; [-0.88; -0.27]^{*}$ & $0.77 \; [ 0.34;  1.20]^{*}$  & $0.74 \; [ 0.41;  1.08]^{*}$  & $0.86 \; [ 0.54;  1.18]^{*}$  \\
-\quad lk.processingP   & $-0.06 \; [-0.29;  0.18]$     & $-0.34 \; [-0.58; -0.10]^{*}$ & $-0.32 \; [-0.53; -0.12]^{*}$ & $0.06 \; [-0.16;  0.27]$      & $-0.03 \; [-0.21;  0.14]$     & $0.06 \; [-0.12;  0.24]$      \\
-Ea [KJ/Mol/K]          &                               &                               &                               &                               &                               &                               \\
-\quad Ea               & $59.50 \; [49.07; 69.93]^{*}$ & $58.58 \; [47.64; 69.51]^{*}$ & $65.81 \; [60.54; 71.09]^{*}$ & $52.47 \; [42.31; 62.63]^{*}$ & $55.83 \; [47.63; 64.03]^{*}$ & $53.12 \; [44.79; 61.45]^{*}$ \\
-\hline
-R2adj                  & 0.977                         & 0.954                         & 0.986                         & 0.973                         & 0.978                         & 0.975                         \\
-AIC                    & $-53.59$                      & $41.32$                       & $-353.78$                     & $-325.25$                     & $-62.09$                      & $-369.41$                     \\
-BIC                    & $-12.01$                      & $82.89$                       & $-312.21$                     & $-283.68$                     & $-20.51$                      & $-327.83$                     \\
-Log Likelihood         & $40.79$                       & $-6.66$                       & $190.89$                      & $176.63$                      & $45.04$                       & $198.71$                      \\
-Num. obs.              & $144$                         & $144$                         & $144$                         & $144$                         & $144$                         & $144$                         \\
-\hline
-\multicolumn{7}{l}{\scriptsize{$^*$ Null hypothesis value outside the confidence interval.}}
-\end{tabular}
-\label{table:coefficients}
-\end{center}
-\end{table}
+\begin{verbatim}
+## The table was written to the file 'anthocyanins.html'.
+\end{verbatim}
+
 \end{landscape}
 
 \begin{Shaded}
@@ -452,10 +420,26 @@ Num. obs.              & $144$                         & $144$                  
 \NormalTok{ant.pred}\SpecialCharTok{$}\NormalTok{processing}\OtherTok{\textless{}{-}}\FunctionTok{factor}\NormalTok{(}\FunctionTok{with}\NormalTok{(ant.pred,}\FunctionTok{substr}\NormalTok{(grouping,}\DecValTok{4}\NormalTok{,}\DecValTok{4}\NormalTok{)))}
 \NormalTok{ant.pred}\SpecialCharTok{$}\NormalTok{Temp}\OtherTok{\textless{}{-}}\FunctionTok{as.numeric}\NormalTok{(}\FunctionTok{with}\NormalTok{(ant.pred,}\FunctionTok{substr}\NormalTok{(grouping,}\DecValTok{6}\NormalTok{,}\DecValTok{8}\NormalTok{)))}
 \NormalTok{ant.pred}\SpecialCharTok{$}\NormalTok{concentration}\OtherTok{\textless{}{-}}\FunctionTok{predict}\NormalTok{(ant.fm3,}\AttributeTok{newdata =}\NormalTok{ ant.pred)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning in model.matrix.default(form1s, model.frame(form1s, dataMod), contr):
+## variable 'sweetener' is absent, its contrast will be ignored
+\end{verbatim}
+
+\begin{verbatim}
+## Warning in model.matrix.default(form1s, model.frame(form1s, dataMod), contr):
+## variable 'processing' is absent, its contrast will be ignored
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
 \FunctionTok{ggplot}\NormalTok{(anthocyanins, }
        \FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ tiempo, }\AttributeTok{y =}\NormalTok{ concentration, }\AttributeTok{col =}\NormalTok{grouping)) }\SpecialCharTok{+}
   \FunctionTok{facet\_wrap}\NormalTok{(compound}\SpecialCharTok{\textasciitilde{}}\NormalTok{.,}\AttributeTok{scales=}\StringTok{"free"}\NormalTok{)}\SpecialCharTok{+}
   \FunctionTok{geom\_point}\NormalTok{()}\SpecialCharTok{+}\FunctionTok{geom\_line}\NormalTok{(}\AttributeTok{data=}\NormalTok{ant.pred,}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{tiempo,}\AttributeTok{y=}\NormalTok{concentration,}\AttributeTok{col=}\NormalTok{grouping))}\SpecialCharTok{+}
+  \FunctionTok{ggtitle}\NormalTok{(}\StringTok{"Degradation kinetic modelled from experimental (lines) vs experimental (dots)"}\NormalTok{)}\SpecialCharTok{+}
   \FunctionTok{xlab}\NormalTok{(}\StringTok{"Storage Time [Days]"}\NormalTok{)}\SpecialCharTok{+}\FunctionTok{ylab}\NormalTok{(}\StringTok{"Concentration [mg/100mL]"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
@@ -476,5 +460,129 @@ Podemos concluir que este cuarto modelo ajusta bastante bien la
 degradación del compuesto respecto a los datos experimentales salvo
 algún punto marginal, y que puede emplearse para realizar predicciones
 bastante ajustadas en el caso de los antocianos.
+
+Por tanto, repetimos el proceso de ajuste y modelado con las condiciones
+de las cuales carecemos de datos experimentales, para posteriormente
+compararlas.
+
+\begin{verbatim}
+##               Model df       AIC       BIC   logLik   Test  L.Ratio p-value
+## ant.fm0_pred2     1 25   71.2563  190.2956 -10.6282                        
+## ant.fm3_pred2     2 79 -633.2143 -257.0501 395.6072 1 vs 2 812.4706  <.0001
+\end{verbatim}
+
+\begin{verbatim}
+## [1] 0.9887058 0.9875993
+\end{verbatim}
+
+\includegraphics{firstModel_Jesus_files/figure-latex/modelo sin datos-1.pdf}
+\includegraphics{firstModel_Jesus_files/figure-latex/modelo sin datos-2.pdf}
+\includegraphics{firstModel_Jesus_files/figure-latex/modelo sin datos-3.pdf}
+\includegraphics{firstModel_Jesus_files/figure-latex/modelo sin datos-4.pdf}
+\includegraphics{firstModel_Jesus_files/figure-latex/modelo sin datos-5.pdf}
+\includegraphics{firstModel_Jesus_files/figure-latex/modelo sin datos-6.pdf}
+
+\begin{verbatim}
+## The table was written to the file 'anthocyanins_pred2.html'.
+\end{verbatim}
+
+\begin{verbatim}
+## Warning in model.matrix.default(form1s, model.frame(form1s, dataMod), contr):
+## variable 'sweetener' is absent, its contrast will be ignored
+\end{verbatim}
+
+\begin{verbatim}
+## Warning in model.matrix.default(form1s, model.frame(form1s, dataMod), contr):
+## variable 'processing' is absent, its contrast will be ignored
+\end{verbatim}
+
+\includegraphics{firstModel_Jesus_files/figure-latex/modelo sin datos 2-1.pdf}
+
+\begin{verbatim}
+## Saving 6.5 x 4.5 in image
+\end{verbatim}
+
+Podemos concluir que el ajuste y las pruebas nos dicen que el modelo es
+válido para las condiciones dadas, como en el caso anterior.
+
+Ahora procedemos a comparar el ajuste de los datos experimentales a las
+predicciones que realiza el mismo modelo sobre las condiciones de las
+que no disponemos de datos experimentales.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# ST:1}
+
+\FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ ant.pred2 }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(grouping }\SpecialCharTok{==} \StringTok{"ST:1:20"}\NormalTok{), }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{tiempo, }\AttributeTok{y =}\NormalTok{ concentration, }\AttributeTok{col =}\NormalTok{ Temp))}\SpecialCharTok{+}
+       \FunctionTok{facet\_wrap}\NormalTok{(compound}\SpecialCharTok{\textasciitilde{}}\NormalTok{.,}\AttributeTok{scales=}\StringTok{"free"}\NormalTok{)}\SpecialCharTok{+}
+       \FunctionTok{geom\_line}\NormalTok{()}\SpecialCharTok{+}\FunctionTok{geom\_line}\NormalTok{(}\AttributeTok{data=}\NormalTok{ant.pred }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(grouping }\SpecialCharTok{==} \StringTok{"ST:1:4"}\NormalTok{), }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{tiempo, }\AttributeTok{y=}\NormalTok{concentration, }\AttributeTok{col =}\NormalTok{ Temp))}\SpecialCharTok{+}
+  \FunctionTok{ggtitle}\NormalTok{(}\StringTok{"ST:P 20º modelled | 4º experimental"}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{xlab}\NormalTok{(}\StringTok{"Storage Time [Days]"}\NormalTok{)}\SpecialCharTok{+}\FunctionTok{ylab}\NormalTok{(}\StringTok{"Concentration [mg/100mL]"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{firstModel_Jesus_files/figure-latex/comparación predicciones-1} \end{center}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# ST:2}
+\FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ ant.pred2 }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(grouping }\SpecialCharTok{==} \StringTok{"ST:2:4"}\NormalTok{), }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{tiempo, }\AttributeTok{y =}\NormalTok{ concentration, }\AttributeTok{col =}\NormalTok{ Temp))}\SpecialCharTok{+}
+  \FunctionTok{facet\_wrap}\NormalTok{(compound}\SpecialCharTok{\textasciitilde{}}\NormalTok{.,}\AttributeTok{scales=}\StringTok{"free"}\NormalTok{)}\SpecialCharTok{+}
+  \FunctionTok{geom\_line}\NormalTok{()}\SpecialCharTok{+}\FunctionTok{geom\_line}\NormalTok{(}\AttributeTok{data=}\NormalTok{ant.pred }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(grouping }\SpecialCharTok{==} \StringTok{"ST:2:20"}\NormalTok{), }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{tiempo, }\AttributeTok{y=}\NormalTok{concentration, }\AttributeTok{col =}\NormalTok{ Temp))}\SpecialCharTok{+}
+  \FunctionTok{ggtitle}\NormalTok{(}\StringTok{"SU:1 20º experimental | 4º modelled"}\NormalTok{)}\SpecialCharTok{+} \FunctionTok{xlab}\NormalTok{(}\StringTok{"Storage Time [Days]"}\NormalTok{)}\SpecialCharTok{+}\FunctionTok{ylab}\NormalTok{(}\StringTok{"Concentration [mg/100mL]"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{firstModel_Jesus_files/figure-latex/comparación predicciones-2} \end{center}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# ST:P}
+\FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ ant.pred2 }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(grouping }\SpecialCharTok{==} \StringTok{"ST:P:20"}\NormalTok{), }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{tiempo, }\AttributeTok{y =}\NormalTok{ concentration, }\AttributeTok{col =}\NormalTok{ Temp))}\SpecialCharTok{+}
+  \FunctionTok{facet\_wrap}\NormalTok{(compound}\SpecialCharTok{\textasciitilde{}}\NormalTok{.,}\AttributeTok{scales=}\StringTok{"free"}\NormalTok{)}\SpecialCharTok{+}
+  \FunctionTok{geom\_line}\NormalTok{()}\SpecialCharTok{+}\FunctionTok{geom\_line}\NormalTok{(}\AttributeTok{data=}\NormalTok{ant.pred }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(grouping }\SpecialCharTok{==} \StringTok{"ST:P:4"}\NormalTok{), }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{tiempo, }\AttributeTok{y=}\NormalTok{concentration, }\AttributeTok{col =}\NormalTok{ Temp))}\SpecialCharTok{+}
+  \FunctionTok{ggtitle}\NormalTok{(}\StringTok{"ST:P 20º modelled | 4º experimental"}\NormalTok{)}\SpecialCharTok{+} \FunctionTok{xlab}\NormalTok{(}\StringTok{"Storage Time [Days]"}\NormalTok{)}\SpecialCharTok{+}\FunctionTok{ylab}\NormalTok{(}\StringTok{"Concentration [mg/100mL]"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{firstModel_Jesus_files/figure-latex/comparación predicciones-3} \end{center}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# SU:1}
+
+\FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ ant.pred2 }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(grouping }\SpecialCharTok{==} \StringTok{"SU:1:4"}\NormalTok{), }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{tiempo, }\AttributeTok{y =}\NormalTok{ concentration, }\AttributeTok{col =}\NormalTok{ Temp))}\SpecialCharTok{+}
+  \FunctionTok{facet\_wrap}\NormalTok{(compound}\SpecialCharTok{\textasciitilde{}}\NormalTok{.,}\AttributeTok{scales=}\StringTok{"free"}\NormalTok{)}\SpecialCharTok{+}
+  \FunctionTok{geom\_line}\NormalTok{()}\SpecialCharTok{+}\FunctionTok{geom\_line}\NormalTok{(}\AttributeTok{data=}\NormalTok{ant.pred }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(grouping }\SpecialCharTok{==} \StringTok{"SU:1:20"}\NormalTok{), }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{tiempo, }\AttributeTok{y=}\NormalTok{concentration, }\AttributeTok{col =}\NormalTok{ Temp)) }\SpecialCharTok{+}
+  \FunctionTok{ggtitle}\NormalTok{(}\StringTok{"SU:1 20º experimental | 4º modelled"}\NormalTok{)}\SpecialCharTok{+} \FunctionTok{xlab}\NormalTok{(}\StringTok{"Storage Time [Days]"}\NormalTok{)}\SpecialCharTok{+}\FunctionTok{ylab}\NormalTok{(}\StringTok{"Concentration [mg/100mL]"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{firstModel_Jesus_files/figure-latex/comparación predicciones-4} \end{center}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# SU:2}
+
+\FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ ant.pred2 }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(grouping }\SpecialCharTok{==} \StringTok{"SU:2:20"}\NormalTok{), }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{tiempo, }\AttributeTok{y =}\NormalTok{ concentration, }\AttributeTok{col =}\NormalTok{ Temp))}\SpecialCharTok{+}
+  \FunctionTok{facet\_wrap}\NormalTok{(compound}\SpecialCharTok{\textasciitilde{}}\NormalTok{.,}\AttributeTok{scales=}\StringTok{"free"}\NormalTok{)}\SpecialCharTok{+}
+  \FunctionTok{geom\_line}\NormalTok{()}\SpecialCharTok{+}\FunctionTok{geom\_line}\NormalTok{(}\AttributeTok{data=}\NormalTok{ant.pred }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(grouping }\SpecialCharTok{==} \StringTok{"SU:2:4"}\NormalTok{), }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{tiempo, }\AttributeTok{y=}\NormalTok{concentration, }\AttributeTok{col =}\NormalTok{ Temp)) }\SpecialCharTok{+}
+  \FunctionTok{ggtitle}\NormalTok{(}\StringTok{"SU:2 20º modelled | 4º experimental"}\NormalTok{)}\SpecialCharTok{+} \FunctionTok{xlab}\NormalTok{(}\StringTok{"Storage Time [Days]"}\NormalTok{)}\SpecialCharTok{+}\FunctionTok{ylab}\NormalTok{(}\StringTok{"Concentration [mg/100mL]"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{firstModel_Jesus_files/figure-latex/comparación predicciones-5} \end{center}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# SU:P}
+
+\FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ ant.pred2 }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(grouping }\SpecialCharTok{==} \StringTok{"SU:P:4"}\NormalTok{), }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{tiempo, }\AttributeTok{y =}\NormalTok{ concentration, }\AttributeTok{col =}\NormalTok{ Temp))}\SpecialCharTok{+}
+  \FunctionTok{facet\_wrap}\NormalTok{(compound}\SpecialCharTok{\textasciitilde{}}\NormalTok{.,}\AttributeTok{scales=}\StringTok{"free"}\NormalTok{)}\SpecialCharTok{+}
+  \FunctionTok{geom\_line}\NormalTok{()}\SpecialCharTok{+}\FunctionTok{geom\_line}\NormalTok{(}\AttributeTok{data=}\NormalTok{ant.pred }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(grouping }\SpecialCharTok{==} \StringTok{"SU:P:20"}\NormalTok{), }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{tiempo, }\AttributeTok{y=}\NormalTok{concentration, }\AttributeTok{col =}\NormalTok{ Temp)) }\SpecialCharTok{+}
+  \FunctionTok{ggtitle}\NormalTok{(}\StringTok{"SU:P 20º experimental | 4º modelled"}\NormalTok{)}\SpecialCharTok{+} \FunctionTok{xlab}\NormalTok{(}\StringTok{"Storage Time [Days]"}\NormalTok{)}\SpecialCharTok{+}\FunctionTok{ylab}\NormalTok{(}\StringTok{"Concentration [mg/100mL]"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{firstModel_Jesus_files/figure-latex/comparación predicciones-6} \end{center}
 
 \end{document}
