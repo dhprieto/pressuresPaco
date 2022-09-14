@@ -4,6 +4,10 @@
 %
 \documentclass[
 ]{article}
+\title{FirstModelsPressuresPaco}
+\author{}
+\date{\vspace{-2.5em}}
+
 \usepackage{amsmath,amssymb}
 \usepackage{lmodern}
 \usepackage{iftex}
@@ -33,6 +37,13 @@
   \KOMAoptions{parskip=half}}
 \makeatother
 \usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={FirstModelsPressuresPaco},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
 \usepackage[margin=1in]{geometry}
 \usepackage{color}
 \usepackage{fancyvrb}
@@ -97,17 +108,6 @@
 \ifLuaTeX
   \usepackage{selnolig}  % disable illegal ligatures
 \fi
-\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
-\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
-\urlstyle{same} % disable monospaced font for URLs
-\hypersetup{
-  pdftitle={FirstModelsPressuresPaco},
-  hidelinks,
-  pdfcreator={LaTeX via pandoc}}
-
-\title{FirstModelsPressuresPaco}
-\author{}
-\date{\vspace{-2.5em}}
 
 \begin{document}
 \maketitle
@@ -420,21 +420,6 @@ datos del experimento en puntos:
 \NormalTok{ant.pred}\SpecialCharTok{$}\NormalTok{processing}\OtherTok{\textless{}{-}}\FunctionTok{factor}\NormalTok{(}\FunctionTok{with}\NormalTok{(ant.pred,}\FunctionTok{substr}\NormalTok{(grouping,}\DecValTok{4}\NormalTok{,}\DecValTok{4}\NormalTok{)))}
 \NormalTok{ant.pred}\SpecialCharTok{$}\NormalTok{Temp}\OtherTok{\textless{}{-}}\FunctionTok{as.numeric}\NormalTok{(}\FunctionTok{with}\NormalTok{(ant.pred,}\FunctionTok{substr}\NormalTok{(grouping,}\DecValTok{6}\NormalTok{,}\DecValTok{8}\NormalTok{)))}
 \NormalTok{ant.pred}\SpecialCharTok{$}\NormalTok{concentration}\OtherTok{\textless{}{-}}\FunctionTok{predict}\NormalTok{(ant.fm3,}\AttributeTok{newdata =}\NormalTok{ ant.pred)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## Warning in model.matrix.default(form1s, model.frame(form1s, dataMod), contr):
-## variable 'sweetener' is absent, its contrast will be ignored
-\end{verbatim}
-
-\begin{verbatim}
-## Warning in model.matrix.default(form1s, model.frame(form1s, dataMod), contr):
-## variable 'processing' is absent, its contrast will be ignored
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
 \FunctionTok{ggplot}\NormalTok{(anthocyanins, }
        \FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ tiempo, }\AttributeTok{y =}\NormalTok{ concentration, }\AttributeTok{col =}\NormalTok{grouping)) }\SpecialCharTok{+}
   \FunctionTok{facet\_wrap}\NormalTok{(compound}\SpecialCharTok{\textasciitilde{}}\NormalTok{.,}\AttributeTok{scales=}\StringTok{"free"}\NormalTok{)}\SpecialCharTok{+}
@@ -486,16 +471,6 @@ compararlas.
 ## The table was written to the file 'anthocyanins_pred2.html'.
 \end{verbatim}
 
-\begin{verbatim}
-## Warning in model.matrix.default(form1s, model.frame(form1s, dataMod), contr):
-## variable 'sweetener' is absent, its contrast will be ignored
-\end{verbatim}
-
-\begin{verbatim}
-## Warning in model.matrix.default(form1s, model.frame(form1s, dataMod), contr):
-## variable 'processing' is absent, its contrast will be ignored
-\end{verbatim}
-
 \includegraphics{firstModel_Jesus_files/figure-latex/modelo sin datos 2-1.pdf}
 
 \begin{verbatim}
@@ -515,8 +490,8 @@ que no disponemos de datos experimentales.
 
 \FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ ant.pred2 }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(grouping }\SpecialCharTok{==} \StringTok{"ST:1:20"}\NormalTok{), }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{tiempo, }\AttributeTok{y =}\NormalTok{ concentration, }\AttributeTok{col =}\NormalTok{ Temp))}\SpecialCharTok{+}
        \FunctionTok{facet\_wrap}\NormalTok{(compound}\SpecialCharTok{\textasciitilde{}}\NormalTok{.,}\AttributeTok{scales=}\StringTok{"free"}\NormalTok{)}\SpecialCharTok{+}
-       \FunctionTok{geom\_line}\NormalTok{()}\SpecialCharTok{+}\FunctionTok{geom\_line}\NormalTok{(}\AttributeTok{data=}\NormalTok{ant.pred }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(grouping }\SpecialCharTok{==} \StringTok{"ST:1:4"}\NormalTok{), }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{tiempo, }\AttributeTok{y=}\NormalTok{concentration, }\AttributeTok{col =}\NormalTok{ Temp))}\SpecialCharTok{+}
-  \FunctionTok{ggtitle}\NormalTok{(}\StringTok{"ST:P 20º modelled | 4º experimental"}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{xlab}\NormalTok{(}\StringTok{"Storage Time [Days]"}\NormalTok{)}\SpecialCharTok{+}\FunctionTok{ylab}\NormalTok{(}\StringTok{"Concentration [mg/100mL]"}\NormalTok{)}
+       \FunctionTok{geom\_point}\NormalTok{()}\SpecialCharTok{+}\FunctionTok{geom\_line}\NormalTok{(}\AttributeTok{data=}\NormalTok{ant.pred }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(grouping }\SpecialCharTok{==} \StringTok{"ST:1:4"}\NormalTok{), }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{tiempo, }\AttributeTok{y=}\NormalTok{concentration, }\AttributeTok{col =}\NormalTok{ Temp))}\SpecialCharTok{+}
+  \FunctionTok{ggtitle}\NormalTok{(}\StringTok{"ST:P 20º modelled (points) | 4º experimental (line)"}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{xlab}\NormalTok{(}\StringTok{"Storage Time [Days]"}\NormalTok{)}\SpecialCharTok{+}\FunctionTok{ylab}\NormalTok{(}\StringTok{"Concentration [mg/100mL]"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -527,8 +502,8 @@ que no disponemos de datos experimentales.
 \CommentTok{\# ST:2}
 \FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ ant.pred2 }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(grouping }\SpecialCharTok{==} \StringTok{"ST:2:4"}\NormalTok{), }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{tiempo, }\AttributeTok{y =}\NormalTok{ concentration, }\AttributeTok{col =}\NormalTok{ Temp))}\SpecialCharTok{+}
   \FunctionTok{facet\_wrap}\NormalTok{(compound}\SpecialCharTok{\textasciitilde{}}\NormalTok{.,}\AttributeTok{scales=}\StringTok{"free"}\NormalTok{)}\SpecialCharTok{+}
-  \FunctionTok{geom\_line}\NormalTok{()}\SpecialCharTok{+}\FunctionTok{geom\_line}\NormalTok{(}\AttributeTok{data=}\NormalTok{ant.pred }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(grouping }\SpecialCharTok{==} \StringTok{"ST:2:20"}\NormalTok{), }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{tiempo, }\AttributeTok{y=}\NormalTok{concentration, }\AttributeTok{col =}\NormalTok{ Temp))}\SpecialCharTok{+}
-  \FunctionTok{ggtitle}\NormalTok{(}\StringTok{"SU:1 20º experimental | 4º modelled"}\NormalTok{)}\SpecialCharTok{+} \FunctionTok{xlab}\NormalTok{(}\StringTok{"Storage Time [Days]"}\NormalTok{)}\SpecialCharTok{+}\FunctionTok{ylab}\NormalTok{(}\StringTok{"Concentration [mg/100mL]"}\NormalTok{)}
+  \FunctionTok{geom\_point}\NormalTok{()}\SpecialCharTok{+}\FunctionTok{geom\_line}\NormalTok{(}\AttributeTok{data=}\NormalTok{ant.pred }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(grouping }\SpecialCharTok{==} \StringTok{"ST:2:20"}\NormalTok{), }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{tiempo, }\AttributeTok{y=}\NormalTok{concentration, }\AttributeTok{col =}\NormalTok{ Temp))}\SpecialCharTok{+}
+  \FunctionTok{ggtitle}\NormalTok{(}\StringTok{"SU:1 20º experimental (lineal) | 4º modelled (points)"}\NormalTok{)}\SpecialCharTok{+} \FunctionTok{xlab}\NormalTok{(}\StringTok{"Storage Time [Days]"}\NormalTok{)}\SpecialCharTok{+}\FunctionTok{ylab}\NormalTok{(}\StringTok{"Concentration [mg/100mL]"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -539,8 +514,8 @@ que no disponemos de datos experimentales.
 \CommentTok{\# ST:P}
 \FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ ant.pred2 }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(grouping }\SpecialCharTok{==} \StringTok{"ST:P:20"}\NormalTok{), }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{tiempo, }\AttributeTok{y =}\NormalTok{ concentration, }\AttributeTok{col =}\NormalTok{ Temp))}\SpecialCharTok{+}
   \FunctionTok{facet\_wrap}\NormalTok{(compound}\SpecialCharTok{\textasciitilde{}}\NormalTok{.,}\AttributeTok{scales=}\StringTok{"free"}\NormalTok{)}\SpecialCharTok{+}
-  \FunctionTok{geom\_line}\NormalTok{()}\SpecialCharTok{+}\FunctionTok{geom\_line}\NormalTok{(}\AttributeTok{data=}\NormalTok{ant.pred }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(grouping }\SpecialCharTok{==} \StringTok{"ST:P:4"}\NormalTok{), }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{tiempo, }\AttributeTok{y=}\NormalTok{concentration, }\AttributeTok{col =}\NormalTok{ Temp))}\SpecialCharTok{+}
-  \FunctionTok{ggtitle}\NormalTok{(}\StringTok{"ST:P 20º modelled | 4º experimental"}\NormalTok{)}\SpecialCharTok{+} \FunctionTok{xlab}\NormalTok{(}\StringTok{"Storage Time [Days]"}\NormalTok{)}\SpecialCharTok{+}\FunctionTok{ylab}\NormalTok{(}\StringTok{"Concentration [mg/100mL]"}\NormalTok{)}
+  \FunctionTok{geom\_point}\NormalTok{()}\SpecialCharTok{+}\FunctionTok{geom\_line}\NormalTok{(}\AttributeTok{data=}\NormalTok{ant.pred }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(grouping }\SpecialCharTok{==} \StringTok{"ST:P:4"}\NormalTok{), }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{tiempo, }\AttributeTok{y=}\NormalTok{concentration, }\AttributeTok{col =}\NormalTok{ Temp))}\SpecialCharTok{+}
+  \FunctionTok{ggtitle}\NormalTok{(}\StringTok{"ST:P 20º modelled (points) | 4º experimental (line)"}\NormalTok{)}\SpecialCharTok{+} \FunctionTok{xlab}\NormalTok{(}\StringTok{"Storage Time [Days]"}\NormalTok{)}\SpecialCharTok{+}\FunctionTok{ylab}\NormalTok{(}\StringTok{"Concentration [mg/100mL]"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -552,8 +527,8 @@ que no disponemos de datos experimentales.
 
 \FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ ant.pred2 }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(grouping }\SpecialCharTok{==} \StringTok{"SU:1:4"}\NormalTok{), }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{tiempo, }\AttributeTok{y =}\NormalTok{ concentration, }\AttributeTok{col =}\NormalTok{ Temp))}\SpecialCharTok{+}
   \FunctionTok{facet\_wrap}\NormalTok{(compound}\SpecialCharTok{\textasciitilde{}}\NormalTok{.,}\AttributeTok{scales=}\StringTok{"free"}\NormalTok{)}\SpecialCharTok{+}
-  \FunctionTok{geom\_line}\NormalTok{()}\SpecialCharTok{+}\FunctionTok{geom\_line}\NormalTok{(}\AttributeTok{data=}\NormalTok{ant.pred }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(grouping }\SpecialCharTok{==} \StringTok{"SU:1:20"}\NormalTok{), }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{tiempo, }\AttributeTok{y=}\NormalTok{concentration, }\AttributeTok{col =}\NormalTok{ Temp)) }\SpecialCharTok{+}
-  \FunctionTok{ggtitle}\NormalTok{(}\StringTok{"SU:1 20º experimental | 4º modelled"}\NormalTok{)}\SpecialCharTok{+} \FunctionTok{xlab}\NormalTok{(}\StringTok{"Storage Time [Days]"}\NormalTok{)}\SpecialCharTok{+}\FunctionTok{ylab}\NormalTok{(}\StringTok{"Concentration [mg/100mL]"}\NormalTok{)}
+  \FunctionTok{geom\_point}\NormalTok{()}\SpecialCharTok{+}\FunctionTok{geom\_line}\NormalTok{(}\AttributeTok{data=}\NormalTok{ant.pred }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(grouping }\SpecialCharTok{==} \StringTok{"SU:1:20"}\NormalTok{), }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{tiempo, }\AttributeTok{y=}\NormalTok{concentration, }\AttributeTok{col =}\NormalTok{ Temp)) }\SpecialCharTok{+}
+  \FunctionTok{ggtitle}\NormalTok{(}\StringTok{"SU:1 20º experimental (line) | 4º modelled (points)"}\NormalTok{)}\SpecialCharTok{+} \FunctionTok{xlab}\NormalTok{(}\StringTok{"Storage Time [Days]"}\NormalTok{)}\SpecialCharTok{+}\FunctionTok{ylab}\NormalTok{(}\StringTok{"Concentration [mg/100mL]"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -565,8 +540,8 @@ que no disponemos de datos experimentales.
 
 \FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ ant.pred2 }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(grouping }\SpecialCharTok{==} \StringTok{"SU:2:20"}\NormalTok{), }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{tiempo, }\AttributeTok{y =}\NormalTok{ concentration, }\AttributeTok{col =}\NormalTok{ Temp))}\SpecialCharTok{+}
   \FunctionTok{facet\_wrap}\NormalTok{(compound}\SpecialCharTok{\textasciitilde{}}\NormalTok{.,}\AttributeTok{scales=}\StringTok{"free"}\NormalTok{)}\SpecialCharTok{+}
-  \FunctionTok{geom\_line}\NormalTok{()}\SpecialCharTok{+}\FunctionTok{geom\_line}\NormalTok{(}\AttributeTok{data=}\NormalTok{ant.pred }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(grouping }\SpecialCharTok{==} \StringTok{"SU:2:4"}\NormalTok{), }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{tiempo, }\AttributeTok{y=}\NormalTok{concentration, }\AttributeTok{col =}\NormalTok{ Temp)) }\SpecialCharTok{+}
-  \FunctionTok{ggtitle}\NormalTok{(}\StringTok{"SU:2 20º modelled | 4º experimental"}\NormalTok{)}\SpecialCharTok{+} \FunctionTok{xlab}\NormalTok{(}\StringTok{"Storage Time [Days]"}\NormalTok{)}\SpecialCharTok{+}\FunctionTok{ylab}\NormalTok{(}\StringTok{"Concentration [mg/100mL]"}\NormalTok{)}
+  \FunctionTok{geom\_point}\NormalTok{()}\SpecialCharTok{+}\FunctionTok{geom\_line}\NormalTok{(}\AttributeTok{data=}\NormalTok{ant.pred }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(grouping }\SpecialCharTok{==} \StringTok{"SU:2:4"}\NormalTok{), }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{tiempo, }\AttributeTok{y=}\NormalTok{concentration, }\AttributeTok{col =}\NormalTok{ Temp)) }\SpecialCharTok{+}
+  \FunctionTok{ggtitle}\NormalTok{(}\StringTok{"SU:2 20º modelled (points) | 4º experimental (lines)"}\NormalTok{)}\SpecialCharTok{+} \FunctionTok{xlab}\NormalTok{(}\StringTok{"Storage Time [Days]"}\NormalTok{)}\SpecialCharTok{+}\FunctionTok{ylab}\NormalTok{(}\StringTok{"Concentration [mg/100mL]"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -578,8 +553,8 @@ que no disponemos de datos experimentales.
 
 \FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ ant.pred2 }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(grouping }\SpecialCharTok{==} \StringTok{"SU:P:4"}\NormalTok{), }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{tiempo, }\AttributeTok{y =}\NormalTok{ concentration, }\AttributeTok{col =}\NormalTok{ Temp))}\SpecialCharTok{+}
   \FunctionTok{facet\_wrap}\NormalTok{(compound}\SpecialCharTok{\textasciitilde{}}\NormalTok{.,}\AttributeTok{scales=}\StringTok{"free"}\NormalTok{)}\SpecialCharTok{+}
-  \FunctionTok{geom\_line}\NormalTok{()}\SpecialCharTok{+}\FunctionTok{geom\_line}\NormalTok{(}\AttributeTok{data=}\NormalTok{ant.pred }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(grouping }\SpecialCharTok{==} \StringTok{"SU:P:20"}\NormalTok{), }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{tiempo, }\AttributeTok{y=}\NormalTok{concentration, }\AttributeTok{col =}\NormalTok{ Temp)) }\SpecialCharTok{+}
-  \FunctionTok{ggtitle}\NormalTok{(}\StringTok{"SU:P 20º experimental | 4º modelled"}\NormalTok{)}\SpecialCharTok{+} \FunctionTok{xlab}\NormalTok{(}\StringTok{"Storage Time [Days]"}\NormalTok{)}\SpecialCharTok{+}\FunctionTok{ylab}\NormalTok{(}\StringTok{"Concentration [mg/100mL]"}\NormalTok{)}
+  \FunctionTok{geom\_point}\NormalTok{()}\SpecialCharTok{+}\FunctionTok{geom\_line}\NormalTok{(}\AttributeTok{data=}\NormalTok{ant.pred }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(grouping }\SpecialCharTok{==} \StringTok{"SU:P:20"}\NormalTok{), }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{tiempo, }\AttributeTok{y=}\NormalTok{concentration, }\AttributeTok{col =}\NormalTok{ Temp)) }\SpecialCharTok{+}
+  \FunctionTok{ggtitle}\NormalTok{(}\StringTok{"SU:P 20º experimental (line) | 4º modelled (points)"}\NormalTok{)}\SpecialCharTok{+} \FunctionTok{xlab}\NormalTok{(}\StringTok{"Storage Time [Days]"}\NormalTok{)}\SpecialCharTok{+}\FunctionTok{ylab}\NormalTok{(}\StringTok{"Concentration [mg/100mL]"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 

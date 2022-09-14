@@ -410,42 +410,42 @@ Ahora procedemos a comparar el ajuste de los datos experimentales a las predicci
 
 ggplot(data = ant.pred2 %>% filter(grouping == "ST:1:20"), aes(x=tiempo, y = concentration, col = Temp))+
        facet_wrap(compound~.,scales="free")+
-       geom_line()+geom_line(data=ant.pred %>% filter(grouping == "ST:1:4"), aes(x=tiempo, y=concentration, col = Temp))+
-  ggtitle("ST:P 20º modelled | 4º experimental") + xlab("Storage Time [Days]")+ylab("Concentration [mg/100mL]")
+       geom_point()+geom_line(data=ant.pred %>% filter(grouping == "ST:1:4"), aes(x=tiempo, y=concentration, col = Temp))+
+  ggtitle("ST:P 20º modelled (points) | 4º experimental (line)") + xlab("Storage Time [Days]")+ylab("Concentration [mg/100mL]")
 
   
 # ST:2
 ggplot(data = ant.pred2 %>% filter(grouping == "ST:2:4"), aes(x=tiempo, y = concentration, col = Temp))+
   facet_wrap(compound~.,scales="free")+
-  geom_line()+geom_line(data=ant.pred %>% filter(grouping == "ST:2:20"), aes(x=tiempo, y=concentration, col = Temp))+
-  ggtitle("SU:1 20º experimental | 4º modelled")+ xlab("Storage Time [Days]")+ylab("Concentration [mg/100mL]")
+  geom_point()+geom_line(data=ant.pred %>% filter(grouping == "ST:2:20"), aes(x=tiempo, y=concentration, col = Temp))+
+  ggtitle("SU:1 20º experimental (lineal) | 4º modelled (points)")+ xlab("Storage Time [Days]")+ylab("Concentration [mg/100mL]")
 
 # ST:P
 ggplot(data = ant.pred2 %>% filter(grouping == "ST:P:20"), aes(x=tiempo, y = concentration, col = Temp))+
   facet_wrap(compound~.,scales="free")+
-  geom_line()+geom_line(data=ant.pred %>% filter(grouping == "ST:P:4"), aes(x=tiempo, y=concentration, col = Temp))+
-  ggtitle("ST:P 20º modelled | 4º experimental")+ xlab("Storage Time [Days]")+ylab("Concentration [mg/100mL]")
+  geom_point()+geom_line(data=ant.pred %>% filter(grouping == "ST:P:4"), aes(x=tiempo, y=concentration, col = Temp))+
+  ggtitle("ST:P 20º modelled (points) | 4º experimental (line)")+ xlab("Storage Time [Days]")+ylab("Concentration [mg/100mL]")
 
 # SU:1
 
 ggplot(data = ant.pred2 %>% filter(grouping == "SU:1:4"), aes(x=tiempo, y = concentration, col = Temp))+
   facet_wrap(compound~.,scales="free")+
-  geom_line()+geom_line(data=ant.pred %>% filter(grouping == "SU:1:20"), aes(x=tiempo, y=concentration, col = Temp)) +
-  ggtitle("SU:1 20º experimental | 4º modelled")+ xlab("Storage Time [Days]")+ylab("Concentration [mg/100mL]")
+  geom_point()+geom_line(data=ant.pred %>% filter(grouping == "SU:1:20"), aes(x=tiempo, y=concentration, col = Temp)) +
+  ggtitle("SU:1 20º experimental (line) | 4º modelled (points)")+ xlab("Storage Time [Days]")+ylab("Concentration [mg/100mL]")
 
 # SU:2
 
 ggplot(data = ant.pred2 %>% filter(grouping == "SU:2:20"), aes(x=tiempo, y = concentration, col = Temp))+
   facet_wrap(compound~.,scales="free")+
-  geom_line()+geom_line(data=ant.pred %>% filter(grouping == "SU:2:4"), aes(x=tiempo, y=concentration, col = Temp)) +
-  ggtitle("SU:2 20º modelled | 4º experimental")+ xlab("Storage Time [Days]")+ylab("Concentration [mg/100mL]")
+  geom_point()+geom_line(data=ant.pred %>% filter(grouping == "SU:2:4"), aes(x=tiempo, y=concentration, col = Temp)) +
+  ggtitle("SU:2 20º modelled (points) | 4º experimental (lines)")+ xlab("Storage Time [Days]")+ylab("Concentration [mg/100mL]")
 
 # SU:P
 
 ggplot(data = ant.pred2 %>% filter(grouping == "SU:P:4"), aes(x=tiempo, y = concentration, col = Temp))+
   facet_wrap(compound~.,scales="free")+
-  geom_line()+geom_line(data=ant.pred %>% filter(grouping == "SU:P:20"), aes(x=tiempo, y=concentration, col = Temp)) +
-  ggtitle("SU:P 20º experimental | 4º modelled")+ xlab("Storage Time [Days]")+ylab("Concentration [mg/100mL]")
+  geom_point()+geom_line(data=ant.pred %>% filter(grouping == "SU:P:20"), aes(x=tiempo, y=concentration, col = Temp)) +
+  ggtitle("SU:P 20º experimental (line) | 4º modelled (points)")+ xlab("Storage Time [Days]")+ylab("Concentration [mg/100mL]")
 
 
 ```

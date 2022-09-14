@@ -1,8 +1,11 @@
+
 # libraries
 library(tidyverse)
 library(ggplot2)
 library(texreg)
+library(nlme)
 source("scripts/r2adj.R")
+
 #read the data
 presiones1.1 <- read.csv("data/presiones1.csv", sep = ";", dec = ",")
 presiones.l <- gather(presiones1.1, compound, concentration,Delphinidin.3.O.sambubioside.5.O.glucoside:Ac.Dehidroascorbico,factor_key=TRUE)
@@ -17,7 +20,6 @@ presiones.l$sweetener<-factor(presiones.l$sweetener)
 presiones.l$processing<-factor(presiones.l$processing)
 presiones.l$rep<-factor(presiones.l$rep)
 presiones.l$compound<-factor(presiones.l$compound,ordered=F)
-
 # select anthocyanins
 anthocyanins <- presiones.l[which(presiones.l$compound %in% c("Delphinidin.3.O.sambubioside.5.O.glucoside",	
                                                             "Delphinidin.3.5.O.diglucoside",
@@ -35,7 +37,9 @@ ggplot(anthocyanins,
 # 1. the storage temperature is the most important factor in the study. 
 # The differences between colours is much bigger than the differences between the lines of the same colour.
 # 2. all the anthocyanins, except for the Delphinidin.3.5.O.diglucoside could reasonably be modelled with an apparent first order kinetic
-library(nlme)
+
+# library(nlme)
+
 # the baseline model. Temperature dependence but processing or sweetener don't affect
 ant.fm0<-gnls(concentration~Cinf+(C0-Cinf)*exp(-exp(lk-Ea/8.314e-3*(1/(Temp+273)-1/(16+273)))*tiempo),
               data=anthocyanins,
@@ -121,7 +125,8 @@ for (i in levels(factor(anthocyanins$compound))){
                                              Ea~1),
                                   start=c(C0=c(5.05,rep(0.001,3)),
                                           Cinf=c(0,rep(0.001,3)),
-                                          lk=c(-4.38,rep(0.001,3)),
+
+                                                                                    lk=c(-4.38,rep(0.001,3)),
                                           Ea=c(67)
                                   )
   )
@@ -166,6 +171,18 @@ presiones1.1_pred2 <- read.csv("data/presiones1.csv", sep = ";", dec = ",")
 presiones.l_pred2 <- gather(presiones1.1_pred2, compound, concentration,Delphinidin.3.O.sambubioside.5.O.glucoside:Ac.Dehidroascorbico,factor_key=TRUE)
 
 # generate temperature 
+
+for (i in seq(1,nrow(presiones.l_pred2))){
+  
+  if (substr(presiones.l_pred2$X,0,3)[i] %in% c("ST1", "STP" ,"SU2")){
+    presiones.l_pred2$Temp[i] <- 20}
+  else{
+    presiones.l_pred2$Temp[i] <- 4
+  }
+
+}
+
+
 presiones.l_pred2$Temp<-factor(substr(presiones.l_pred2$X,0,3))
 levels(presiones.l_pred2$Temp)<-c(20,4,20,4,20,4)
 presiones.l_pred2$Temp<-as.numeric(as.character(presiones.l_pred2$Temp))
@@ -262,6 +279,7 @@ texreg(list.of.compound.fit,single.row=T,ci.force=T,
 # Figure of pred2ictions
 # first order apparent plot  to study the importance of Temperature
 anthocyanins_pred2$grouping<-with(anthocyanins_pred2,sweetener:processing:factor(Temp))
+
 ant.pred2<-expand.grid(tiempo=seq(0,90,length=50),
                       compound=levels(factor(anthocyanins_pred2$compound)),
                       grouping=levels(factor(anthocyanins_pred2$grouping))
@@ -273,18 +291,29 @@ ant.pred2$Temp<-as.numeric(with(ant.pred2,substr(grouping,6,8)))
 ant.pred2$concentration<-predict(ant.fm3_pred2,newdata = ant.pred2)
 ggplot(data=ant.pred2,aes(x=tiempo,y=concentration,col=grouping)) +
   facet_wrap(compound~.,scales="free")+
-  geom_line()+geom_point(data=anthocyanins,aes(x=tiempo,y=concentration,col=grouping))+
+  xlab("Storage Time [Days]")+ylab("Concentration [mg/100mL]")+
+  geom_line()
 
-  xlab("Storage Time [Days]")+ylab("Concentration [mg/100mL]")
 ggsave(filename="Figure1_pred2.pdf")
+
+
+ggplot(ant.pred2, 
+       aes(x = tiempo, y = log(concentration), group =grouping,color=factor(Temp))) +
+  facet_wrap(compound~.,scales="free")+
+  geom_point()+ geom_smooth(method="lm",se = F)+
+  xlab("Storage Time [Days]")+ylab("Concentration mg/100mL)")
+
 
 
 # ST:1
 
 ggplot(data = ant.pred2 %>% filter(grouping == "ST:1:20"), aes(x=tiempo, y = concentration, col = Temp))+
        facet_wrap(compound~.,scales="free")+
-       geom_line()+ geom_line(data=ant.pred %>% filter(grouping == "ST:1:4"), aes(x=tiempo, y=concentration, col = Temp))+
+       geom_point()+ geom_line(data=ant.pred %>% filter(grouping == "ST:2:20"), aes(x=tiempo, y=concentration, col = Temp))+
   ggtitle("ST:P 20º modelled | 4º experimental") + xlab("Storage Time [Days]")+ylab("Concentration [mg/100mL]")
+
+view(ant.pred %>% filter(compound == "Delphinidin.3.O.glucoside"))
+view(ant.pred2 %>% filter(compound == "Delphinidin.3.O.glucoside"))
 
 subset(ant.pred2, ant.pred2$compound == "Delphinidin.3.O.glucoside")
 unique(ant.pred2$compound)
