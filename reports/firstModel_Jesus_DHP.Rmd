@@ -5,9 +5,9 @@ header-includes:
 - \newcommand{\blandscape}{\begin{landscape}}
 - \newcommand{\elandscape}{\end{landscape}}
 output:
+  pdf_document: default
   html_document:
     df_print: paged
-  pdf_document: default
 ---
 
 
@@ -17,6 +17,7 @@ library(tidyverse)
 library(ggplot2)
 library(texreg)
 library(nlme)
+library(nlraa)
 
 source("../scripts/r2adj.R")
 knitr::opts_chunk$set(echo = TRUE)
@@ -289,9 +290,12 @@ ant.simul2<-expand.grid(tiempo=seq(0,90,length=30),
 ant.simul2$sweetener<-factor(with(ant.simul2,substr(grouping,0,2)))
 ant.simul2$processing<-factor(with(ant.simul2,substr(grouping,4,4)))
 ant.simul2$grouping<-with(ant.simul2,sweetener:processing:factor(Temp))
-
-
 ant.simul2$prediction<-predict(ant.fm3,newdata = ant.simul2)
+
+# añadimos confidence bands
+
+fm3.dm <- predict_gnls(ant.fm3, newdata = ant.simul2, interval = "conf")
+ant.simul2.dm <- cbind(ant.simul2, fm3.dm)
 
 ggplot(ant.simul2, 
        aes(x = tiempo, y = prediction, col = factor(Temp))) +
@@ -309,48 +313,60 @@ Ahora procedemos a representar cada una de las condiciones separando las tempera
 
 # ST:1
 
-ggplot(data = subset(ant.simul2,grouping == "ST:1:20"), aes(x=tiempo, y = prediction, col = factor(Temp)))+
+ggplot(data = subset(ant.simul2.dm,grouping == "ST:1:20"), aes(x=tiempo, y = prediction, col = factor(Temp)))+
   facet_wrap(compound~.,scales="free")+
-  geom_point()+ geom_point(data=subset(anthocyanins,grouping == "ST:1:4"), aes(x=tiempo, y=concentration, col = factor(Temp)))+
+  geom_point()+
+  geom_point(data=subset(anthocyanins,grouping == "ST:1:4"), aes(x=tiempo, y=concentration, col = factor(Temp)))+
+  geom_errorbar(aes(x = tiempo, ymin= Q2.5, ymax = Q97.5), alpha=0.5)+
   ggtitle("ST:1 20º modelled | 4º experimental") + xlab("Storage Time [Days]")+ylab("Concentration [mg/100mL]")
 
 # ST:2
-ggplot(data = ant.simul2 %>% filter(grouping == "ST:2:4"), aes(x=tiempo, y = prediction, col = factor(Temp)))+
+ggplot(data = ant.simul2.dm %>% filter(grouping == "ST:2:4"), aes(x=tiempo, y = prediction, col = factor(Temp)))+
   facet_wrap(compound~.,scales="free")+
-  geom_point()+geom_point(data=anthocyanins %>% filter(grouping == "ST:2:20"), aes(x=tiempo, y=concentration, col = factor(Temp)))+
+  geom_point()+
+  geom_point(data=anthocyanins %>% filter(grouping == "ST:2:20"), aes(x=tiempo, y=concentration, col = factor(Temp)))+
+  geom_errorbar(aes(x = tiempo, ymin= Q2.5, ymax = Q97.5), alpha=0.5)+
   ggtitle("SU:1 20º experimental | 4º modelled")+ xlab("Storage Time [Days]")+ylab("Concentration [mg/100mL]")
 
 # ST:P
-ggplot(data = ant.simul2 %>% filter(grouping == "ST:P:20"), aes(x=tiempo, y = prediction, col = factor(Temp)))+
+ggplot(data = ant.simul2.dm %>% filter(grouping == "ST:P:20"), aes(x=tiempo, y = prediction, col = factor(Temp)))+
   facet_wrap(compound~.,scales="free")+
   geom_point()+geom_point(data=anthocyanins %>% filter(grouping == "ST:P:4"), aes(x=tiempo, y=concentration, col = factor(Temp)))+
+  geom_errorbar(aes(x = tiempo, ymin= Q2.5, ymax = Q97.5), alpha=0.5)+
   ggtitle("ST:P 20º modelled | 4º experimental")+ xlab("Storage Time [Days]")+ylab("Concentration [mg/100mL]")
 
 # SU:1
 
-ggplot(data = ant.simul2 %>% filter(grouping == "SU:1:4"), aes(x=tiempo, y = prediction, col = factor(Temp)))+
+ggplot(data = ant.simul2.dm %>% filter(grouping == "SU:1:4"), aes(x=tiempo, y = prediction, col = factor(Temp)))+
   facet_wrap(compound~.,scales="free")+
-  geom_point()+geom_point(data=anthocyanins %>% filter(grouping == "SU:1:20"), aes(x=tiempo, y=concentration, col = factor(Temp))) +
+  geom_point()+
+  geom_point(data=anthocyanins %>% filter(grouping == "SU:1:20"), aes(x=tiempo, y=concentration, col = factor(Temp))) +
+  geom_errorbar(aes(x = tiempo, ymin= Q2.5, ymax = Q97.5), alpha=0.5)+
   ggtitle("SU:1 20º experimental | 4º modelled")+ xlab("Storage Time [Days]")+ylab("Concentration [mg/100mL]")
 
 # SU:2
 
-ggplot(data = ant.simul2 %>% filter(grouping == "SU:2:20"), aes(x=tiempo, y =prediction, col = factor(Temp)))+
+ggplot(data = ant.simul2.dm %>% filter(grouping == "SU:2:20"), aes(x=tiempo, y =prediction, col = factor(Temp)))+
   facet_wrap(compound~.,scales="free")+
-  geom_point()+geom_point(data=anthocyanins %>% filter(grouping == "SU:2:4"), aes(x=tiempo, y=concentration, col = factor(Temp))) +
+  geom_point()+
+  geom_point(data=anthocyanins %>% filter(grouping == "SU:2:4"), aes(x=tiempo, y=concentration, col = factor(Temp))) +
+  geom_errorbar(aes(x = tiempo, ymin= Q2.5, ymax = Q97.5), alpha=0.5)+
   ggtitle("SU:2 20º modelled | 4º experimental")+ xlab("Storage Time [Days]")+ylab("Concentration [mg/100mL]")
 
 # SU:P
 
-ggplot(data = ant.simul2 %>% filter(grouping == "SU:P:4"), aes(x=tiempo, y = prediction, col = factor(Temp)))+
+ggplot(data = ant.simul2.dm %>% filter(grouping == "SU:P:4"), aes(x=tiempo, y = prediction, col = factor(Temp)))+
   facet_wrap(compound~.,scales="free")+
-  geom_point()+geom_point(data=anthocyanins %>% filter(grouping == "SU:P:20"), aes(x=tiempo, y=concentration, col = factor(Temp))) +
+  geom_point()+
+  geom_point(data=anthocyanins %>% filter(grouping == "SU:P:20"), aes(x=tiempo, y=concentration, col = factor(Temp))) +
+  geom_errorbar(aes(x = tiempo, ymin= Q2.5, ymax = Q97.5), alpha=0.5)+
   ggtitle("SU:P 20º experimental | 4º modelled")+ xlab("Storage Time [Days]")+ylab("Concentration [mg/100mL]")
+
 
 
 ```
 
-
+Podemos concluir ...
 
 
 
