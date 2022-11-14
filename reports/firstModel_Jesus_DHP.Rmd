@@ -5,9 +5,9 @@ header-includes:
 - \newcommand{\blandscape}{\begin{landscape}}
 - \newcommand{\elandscape}{\end{landscape}}
 output:
-  pdf_document: default
   html_document:
     df_print: paged
+  pdf_document: default
 ---
 
 
@@ -80,7 +80,7 @@ Procedemos a la primera modelización, una degradación de primer orden aparente
 
 $$C(t)_i \sim C_{\infty_i}+(C_{0_i}-C_{\infty_i})e^{(-e^{(lk_i-\frac{Ea_i}{R} \frac{1}{ T}-\frac{1}{T_{ref}})})t}$$
 Donde $C(t)_i$ es la concentracion del antocianino i a tiempo t y $C_{0_i}$ $C_{\infty}$ $lk_i$ and $Ea_i$ son la concentracion inicial, concentracion final, el logaritmo natural de la constante aparente de primer orden y la energia de activacion para el antocianino i. La temperatura de referencia es $16^oC$ y la constante R es $0.008314 \frac{KJ}{Mol\cdot K}$.
-```{r first model, results=FALSE,}
+```{r first model, results="hide"}
 
 ant.fm0<-gnls(concentration~Cinf+(C0-Cinf)*exp(-exp(lk-Ea/8.314e-3*(1/(Temp+273)-1/(16+273)))*tiempo),
               data=anthocyanins,
@@ -93,7 +93,7 @@ ant.fm0<-gnls(concentration~Cinf+(C0-Cinf)*exp(-exp(lk-Ea/8.314e-3*(1/(Temp+273)
                       lk=c(0.01,rep(0.001,5)),
                       Ea=c(10,rep(0.001,5)))
 )
-summary(ant.fm0,cor=F)
+# summary(ant.fm0,cor=F)
 ```
 
 *Modelizacion de la co-varianza*
@@ -102,7 +102,7 @@ Con el diseño experimental se pueden estimar los efectos principales de las var
 
 En este modelo endulzante y procesado son efectos iguales para todos los compuestos.
 
-```{r second model Ea~1, results=FALSE}
+```{r second model Ea~1, results="hide"}
 
 ant.fm1<-gnls(concentration~Cinf+(C0-Cinf)*exp(-exp(lk-Ea/8.314e-3*(1/(Temp+273)-1/(16+273)))*tiempo),
               data=anthocyanins,
@@ -116,13 +116,13 @@ ant.fm1<-gnls(concentration~Cinf+(C0-Cinf)*exp(-exp(lk-Ea/8.314e-3*(1/(Temp+273)
                       Ea=c(coef(ant.fm0)[19])
                       )
 )
-summary(ant.fm1)
+# summary(ant.fm1)
 
 ```
 
 Ahora intentaremos estimar los diferentes coeficientes de constantes entre diferentes componentes y condiciones de procesamiento 
 
-```{r third model, results=FALSE}
+```{r third model, results="hide"}
 ant.fm2<-gnls(concentration~Cinf+(C0-Cinf)*exp(-exp(lk-Ea/8.314e-3*(1/(Temp+273)-1/(16+273)))*tiempo),
                data=anthocyanins,
                param=list(C0~compound+sweetener+processing,
@@ -135,7 +135,7 @@ ant.fm2<-gnls(concentration~Cinf+(C0-Cinf)*exp(-exp(lk-Ea/8.314e-3*(1/(Temp+273)
                        Ea=c(coef(ant.fm0)[19],rep(0.001,5))
                )
 )
-summary(ant.fm2)
+# summary(ant.fm2)
 ```
 
 Obtenemos aproximadamente cuatro parámetros significativos. Ea es solo diferente en D.3.5.0.diglucosido
@@ -151,7 +151,7 @@ Las mejoras en los modelos son muy significativas y mejoran el ruido
 
 Realizamos un cuarto modelo, con los coeficientes de los factores en todas las variables
 
-```{r fourth model, results= FALSE}
+```{r fourth model, results="hide"}
 
 ant.fm3<-gnls(concentration~Cinf+(C0-Cinf)*exp(-exp(lk-Ea/8.314e-3*(1/(Temp+273)-1/(16+273)))*tiempo),
                data=anthocyanins,
@@ -165,7 +165,7 @@ ant.fm3<-gnls(concentration~Cinf+(C0-Cinf)*exp(-exp(lk-Ea/8.314e-3*(1/(Temp+273)
                        Ea=c(coef(ant.fm0)[13:18])
                )
 )
-screenreg(ant.fm3,single.row=T,ci.force=T)
+# screenreg(ant.fm3,single.row=T,ci.force=T)
 
 ```
 
@@ -180,7 +180,7 @@ r2(ant.fm3)
 
 Realizamos gráficas de diagnóstico para el cuarto modelo
 
-```{r diagnostic tables}
+```{r diagnostic tables, results="hide"}
 
 plot(ant.fm3)
 qqnorm(ant.fm3)
@@ -230,7 +230,7 @@ for (i in levels(factor(anthocyanins$compound))){
 
 \newpage
 \blandscape
-```{r nice table, echo = FALSE, results = 'asis'}
+```{r nice table, echo = FALSE, results="hide"}
 
 htmlreg(list.of.compound.fit,single.row=T,ci.force=T,
         groups=list("C0 [mg/100mL]"=1:4,"Cinf [mg/100mL]"=5:8,"ln(k) [1/min]"=9:12,"Ea [KJ/Mol/K]"=13),
@@ -239,10 +239,10 @@ htmlreg(list.of.compound.fit,single.row=T,ci.force=T,
         caption.above=T,
         caption="Table X. Comparison of the apparent first order kinetic parameters and effects of processing and sweetener used")
 
-tmp <- URLencode(paste(readLines("anthocyanins.html"), collapse = "\n"))
-
-cat('<iframe src="data:text/html;charset=utf-8,', tmp, 
-    '" style="border: none; seamless:seamless; width:900px; height:700px"></iframe>')
+# tmp <- URLencode(paste(readLines("anthocyanins.html"), collapse = "\n"))
+# 
+# cat('<iframe src="data:text/html;charset=utf-8,', tmp, 
+#     '" style="border: none; seamless:seamless; width:900px; height:700px"></iframe>')
 
 ```
 
@@ -250,9 +250,10 @@ cat('<iframe src="data:text/html;charset=utf-8,', tmp,
 
 \elandscape
 
-```{r figure of predictions}
+```{r figure of predictions, results="hide"}
 
-anthocyanins$grouping<-with(anthocyanins,sweetener:processing:factor(Temp))
+anthocyanins$grouping<-factor(with(anthocyanins,sweetener:processing:factor(Temp)))
+
 ant.pred<-expand.grid(tiempo=seq(0,90,length=50),
                        compound=levels(factor(anthocyanins$compound)),
                        grouping=levels(factor(anthocyanins$grouping))
@@ -282,14 +283,11 @@ Por tanto, generamos una grilla de datos para simular las condiciones en las que
 ant.simul2<-expand.grid(tiempo=seq(0,90,length=30),
                         Temp = c(20,4),
                         compound=levels(factor(anthocyanins$compound)),
-                        grouping=levels(factor(anthocyanins$grouping))
-)
 
-
-
+grouping=c("ST:1", "ST:2", "ST:P","SU:1", "SU:2", "SU:P")) 
+# ant.simul2$grouping <- factor(ant.simul2$grouping:factor(ant.simul2$Temp))
 ant.simul2$sweetener<-factor(with(ant.simul2,substr(grouping,0,2)))
 ant.simul2$processing<-factor(with(ant.simul2,substr(grouping,4,4)))
-ant.simul2$grouping<-with(ant.simul2,sweetener:processing:factor(Temp))
 ant.simul2$prediction<-predict(ant.fm3,newdata = ant.simul2)
 
 # añadimos confidence bands
@@ -297,11 +295,11 @@ ant.simul2$prediction<-predict(ant.fm3,newdata = ant.simul2)
 fm3.dm <- predict_gnls(ant.fm3, newdata = ant.simul2, interval = "conf")
 ant.simul2.dm <- cbind(ant.simul2, fm3.dm)
 
-ggplot(ant.simul2, 
-       aes(x = tiempo, y = prediction, col = factor(Temp))) +
-  facet_grid(processing+sweetener~factor(compound),scales="free")+
-  geom_point()+geom_line()+
-  xlab("Storage Time [Days]")+ylab("Concentration [mg/100mL]")
+# ggplot(ant.simul2, 
+#        aes(x = tiempo, y = prediction, col = factor(Temp))) +
+#   facet_grid(processing+sweetener~factor(compound),scales="free")+
+#   geom_point()+geom_line()+
+#   xlab("Storage Time [Days]")+ylab("Concentration [mg/100mL]")
 ```
 
 
@@ -311,13 +309,35 @@ Ahora procedemos a representar cada una de las condiciones separando las tempera
 
 ```{r comparaciones temperaturas r}
 
+anthocyanins$grouping<-factor(with(anthocyanins,sweetener:processing))
+
+
+# all possibilites with colour
+
+ggplot(data = anthocyanins, aes(x=tiempo, y = concentration, col = factor(Temp)))+
+  facet_grid(compound~factor(grouping),scales="free")+
+  geom_point()+
+  geom_ribbon(data=ant.simul2.dm,aes(y = prediction, ymin= Q2.5, ymax = Q97.5), alpha=0.5)+ 
+  geom_line(data=ant.simul2.dm,aes(y=Estimate))+
+  xlab("Storage Time [Days]")+ylab("Concentration [mg/100mL]")
+
+# all possibilites w/o colour
+
+ggplot(data = anthocyanins, aes(x=tiempo, y = concentration))+
+  facet_grid(compound~factor(grouping):factor(Temp),scales="free")+
+  geom_point()+
+  geom_ribbon(data=ant.simul2.dm,aes(y = prediction, ymin= Q2.5, ymax = Q97.5), alpha=0.5)+ 
+  geom_line(data=ant.simul2.dm,aes(y=Estimate))+
+  xlab("Storage Time [Days]")+ylab("Concentration [mg/100mL]")
+
+
 # ST:1
 
 ggplot(data = subset(ant.simul2.dm,grouping == "ST:1:20"), aes(x=tiempo, y = prediction, col = factor(Temp)))+
   facet_wrap(compound~.,scales="free")+
   geom_point()+
   geom_point(data=subset(anthocyanins,grouping == "ST:1:4"), aes(x=tiempo, y=concentration, col = factor(Temp)))+
-  geom_errorbar(aes(x = tiempo, ymin= Q2.5, ymax = Q97.5), alpha=0.5)+
+  geom_ribbon(aes(x = tiempo, ymin= Q2.5, ymax = Q97.5), alpha=0.5)+
   ggtitle("ST:1 20º modelled | 4º experimental") + xlab("Storage Time [Days]")+ylab("Concentration [mg/100mL]")
 
 # ST:2
@@ -325,14 +345,14 @@ ggplot(data = ant.simul2.dm %>% filter(grouping == "ST:2:4"), aes(x=tiempo, y = 
   facet_wrap(compound~.,scales="free")+
   geom_point()+
   geom_point(data=anthocyanins %>% filter(grouping == "ST:2:20"), aes(x=tiempo, y=concentration, col = factor(Temp)))+
-  geom_errorbar(aes(x = tiempo, ymin= Q2.5, ymax = Q97.5), alpha=0.5)+
+  geom_ribbon(aes(x = tiempo, ymin= Q2.5, ymax = Q97.5), alpha=0.5)+
   ggtitle("SU:1 20º experimental | 4º modelled")+ xlab("Storage Time [Days]")+ylab("Concentration [mg/100mL]")
 
 # ST:P
 ggplot(data = ant.simul2.dm %>% filter(grouping == "ST:P:20"), aes(x=tiempo, y = prediction, col = factor(Temp)))+
   facet_wrap(compound~.,scales="free")+
   geom_point()+geom_point(data=anthocyanins %>% filter(grouping == "ST:P:4"), aes(x=tiempo, y=concentration, col = factor(Temp)))+
-  geom_errorbar(aes(x = tiempo, ymin= Q2.5, ymax = Q97.5), alpha=0.5)+
+  geom_ribbon(aes(x = tiempo, ymin= Q2.5, ymax = Q97.5), alpha=0.5)+
   ggtitle("ST:P 20º modelled | 4º experimental")+ xlab("Storage Time [Days]")+ylab("Concentration [mg/100mL]")
 
 # SU:1
@@ -341,7 +361,7 @@ ggplot(data = ant.simul2.dm %>% filter(grouping == "SU:1:4"), aes(x=tiempo, y = 
   facet_wrap(compound~.,scales="free")+
   geom_point()+
   geom_point(data=anthocyanins %>% filter(grouping == "SU:1:20"), aes(x=tiempo, y=concentration, col = factor(Temp))) +
-  geom_errorbar(aes(x = tiempo, ymin= Q2.5, ymax = Q97.5), alpha=0.5)+
+  geom_ribbon(aes(x = tiempo, ymin= Q2.5, ymax = Q97.5), alpha=0.5)+
   ggtitle("SU:1 20º experimental | 4º modelled")+ xlab("Storage Time [Days]")+ylab("Concentration [mg/100mL]")
 
 # SU:2
@@ -350,7 +370,7 @@ ggplot(data = ant.simul2.dm %>% filter(grouping == "SU:2:20"), aes(x=tiempo, y =
   facet_wrap(compound~.,scales="free")+
   geom_point()+
   geom_point(data=anthocyanins %>% filter(grouping == "SU:2:4"), aes(x=tiempo, y=concentration, col = factor(Temp))) +
-  geom_errorbar(aes(x = tiempo, ymin= Q2.5, ymax = Q97.5), alpha=0.5)+
+  geom_ribbon(aes(x = tiempo, ymin= Q2.5, ymax = Q97.5), alpha=0.5)+
   ggtitle("SU:2 20º modelled | 4º experimental")+ xlab("Storage Time [Days]")+ylab("Concentration [mg/100mL]")
 
 # SU:P
@@ -359,7 +379,7 @@ ggplot(data = ant.simul2.dm %>% filter(grouping == "SU:P:4"), aes(x=tiempo, y = 
   facet_wrap(compound~.,scales="free")+
   geom_point()+
   geom_point(data=anthocyanins %>% filter(grouping == "SU:P:20"), aes(x=tiempo, y=concentration, col = factor(Temp))) +
-  geom_errorbar(aes(x = tiempo, ymin= Q2.5, ymax = Q97.5), alpha=0.5)+
+  geom_ribbon(aes(x = tiempo, ymin= Q2.5, ymax = Q97.5), alpha=0.5)+
   ggtitle("SU:P 20º experimental | 4º modelled")+ xlab("Storage Time [Days]")+ylab("Concentration [mg/100mL]")
 
 
