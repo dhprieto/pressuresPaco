@@ -3,11 +3,16 @@ library(deSolve)
 library(tidyr)
 library(nlme)
 library(ggplot2)
+library(rmutil)
+library(minpack.lm)
+library(nlraa)
 
 Time<-seq(0,100,1)
+
 # dAA  = -k1*AA + k2*DHAA
 # dDHA =  k1*AA - k2*DHAA - k3 * DHA
 # dDKG =                  + k3 * DHA
+
 aadhaa<-function(t,y,parms){
   aa<-y[1]
   dhaa<-y[2]
@@ -19,23 +24,30 @@ aadhaa<-function(t,y,parms){
   dkg <- k3*dhaa
   return(list(c(daa,ddhaa,dkg)))
 }
+
 C0<-c(aa=2,dhaa=1,dkg=0)
 pars<-c(k1=.2,k2=.05,k3=.1)
 y<-ode(y=C0,times=Time,func=aadhaa,parms=pars)
 plot(y)
+
 ##  System of linear differential equations:
+
 aadha.lde<-function(Time,k1,k2,k3,aa0,dhaa0,dkg0=0){
 M <- matrix(c(-pars["k1"],pars["k2"],0, pars["k1"],-(pars["k2"]+pars["k3"]),0,0,pars["k3"],0), 3, 3, byrow=TRUE)
-M
-yt <-  lin.diff.eqn(A=M,initial=C0,t=Time)
+print(M)
+yt <- lin.diff.eqn(A=M,initial=C0,t=Time)
 yt<-as.data.frame(cbind(Time,yt))
 names(yt)<-c("Time","aa","dhaa","dkg")
 return(yt)
 }
-yt<-aadha.lde(Time,.2,.05,.1,2,1,0)
+
+yt<-aadha.lde(Time,k1=.2,k2=.05,k3=.1,aa0=2,dhaa=1,dkg0=0)
 plot(y,obs=yt)
 
-presiones<-read.csv("presiones1.csv",sep=";",dec=",")
+# Experimental data
+
+presiones<-read.csv("data/presiones1.csv",sep=";",dec=",")
+
 VitC<-subset(presiones,select=c("X","rep","processing","sweetener","tiempo","Ac.Ascorbico","Ac.Dehidroascorbico"))
 AA<-VitC
 AA$Concentracion<-AA$Ac.Ascorbico
@@ -47,7 +59,9 @@ VitC.l<-rbind(AA,DHA)
 VitC.l$Ac.Ascorbico<-NULL
 VitC.l$Ac.Dehidroascorbico<-NULL
 summary(VitC.l)
+
 # create temperature
+
 VitC.l$Temp<-factor(substr(VitC.l$X,0,3))
 levels(VitC.l$Temp)<-c(4,20,4,20,4,20)
 VitC.l$Temp<-as.numeric(as.character(VitC.l$Temp))
@@ -57,7 +71,8 @@ VitC.l$processing<-factor(VitC.l$processing)
 VitC.l$rep<-factor(VitC.l$rep)
 VitC.l$Species<-factor(VitC.l$Species,ordered=F)
 
-ggplot(data=VitC.l,aes(x=tiempo,y=Concentracion,col=Species))+geom_point()+facet_grid(processing~sweetener)
+ggplot(data=VitC.l,aes(x=tiempo,y=Concentracion,col=Species))+
+  geom_point()+facet_grid(processing~sweetener)
 
 aadha.ldef<-function(Time,Species,k1,k2,k3,aa0,dhaa0,dkg0=0){
   yhat<-rep(NA,length(Time))
@@ -74,11 +89,13 @@ aadha.ldef<-function(Time,Species,k1,k2,k3,aa0,dhaa0,dkg0=0){
 }
 
 VitC.l$yhat<-with(VitC.l,aadha.ldef(tiempo,Species,.02,.05,.1,12,2.5,0))
+
 ggplot(data=VitC.l,aes(x=tiempo,y=Concentracion,col=Species))+
   geom_point()+
   geom_line(aes(y=yhat))+
   facet_grid(processing~sweetener)
 
+# doesnt work "  step halving factor reduced below minimum in NLS step"
 
 VitC.fm0<-gnls(Concentracion~aadha.ldef(Time=tiempo,Species = Species,
                                         k1=exp(lk1-Ea1/8.314e-3*(1/(Temp+273)-1/(16+273))),
@@ -90,7 +107,7 @@ VitC.fm0<-gnls(Concentracion~aadha.ldef(Time=tiempo,Species = Species,
                start=c(lk1=0.02,Ea1=10,lk2=0.05,Ea2=10,lk3=0.1,Ea3=10,aa0=15,dhaa0=2.5),
                verbose=T)
 
-library(minpack.lm)
+
 
 VitC.fm0<-nlsLM(Concentracion~aadha.ldef(Time=tiempo,Species = Species,
                                         k1=exp(lk1-Ea1/8.314e-3*(1/(Temp+273)-1/(16+273))),
@@ -141,10 +158,13 @@ VitC.pred<-expand.grid(tiempo=seq(0,90,length=50),
                        Species=levels(factor(VitC.l$Species)),
                        grouping=levels(factor(VitC.l$X))
 )
+
 VitC.pred$Temp<-factor(substr(VitC.pred$grouping,0,3))
 levels(VitC.pred$Temp)<-c(4,20,4,20,4,20)
 VitC.pred$Temp<-as.numeric(as.character(VitC.pred$Temp))
+
 #create factors for covariate modelling
+
 VitC.pred$sweetener<-factor(with(VitC.pred,substr(grouping,0,2)))
 VitC.pred$processing<-factor(with(VitC.pred,substr(grouping,3,3)))
 VitC.pred$sweetener<-factor(VitC.pred$sweetener)
@@ -165,4 +185,34 @@ ggplot(VitC.l,
   xlab("Storage Time [Days]")+ylab("Concentration [mg/100mL]")
 ggsave(filename="Figure1AA.pdf")
 
+# simulating temperature
 
+VitC.l$Temp <- factor(VitC.l$Temp)
+levels(VitC.l$Temp) <- c(20,4,20,4,20,4)
+VitC.l$Temp<-as.numeric(as.character(VitC.l$Temp))
+VitC.l$grouping<-with(VitC.l,sweetener:processing:factor(Temp))
+
+VitC.pred2<-expand.grid(tiempo=seq(0,90,length=50),
+                       Species=levels(factor(VitC.l$Species)),
+                       grouping=levels(factor(VitC.l$grouping))
+)
+
+
+VitC.pred2$sweetener<-factor(with(VitC.pred2,substr(grouping,0,2)))
+VitC.pred2$processing<-factor(with(VitC.pred2,substr(grouping,4,4)))
+VitC.pred2$Temp<-as.numeric(with(VitC.pred2,substr(grouping,6,8)))
+VitC.pred2$Species<-factor(VitC.pred2$Species,ordered=F)
+
+VitC.pred2$Concentration<-predict(VitC.fm000,newdata = VitC.pred2)
+
+yhat<-predict_gnls(VitC.fm000,newdata=VitC.pred2,interval="prediction")
+VitC.pred2$Q2.5<-yhat[,"Q2.5"]
+VitC.pred2$Q97.5<-yhat[,"Q97.5"]
+
+ggplot(data=VitC.pred2,
+       aes(x=tiempo,y=Concentration,col=Species)) +
+  facet_grid(.~grouping)+
+  geom_line()+
+  geom_ribbon(data=VitC.pred2,aes(ymax=Q97.5,ymin=Q2.5,y=Concentration,col=Species,fill=Species),alpha=0.2)+
+  xlab("Storage Time [Days]")+ylab("Concentration [mg/100mL]")
+ggsave(filename="FigureTempAA.pdf")
