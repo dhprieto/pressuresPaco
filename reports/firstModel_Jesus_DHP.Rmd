@@ -308,7 +308,7 @@ Vemos que las predicciones se comportan de forma acorde a lo esperado según las
 Ahora procedemos a representar cada una de las condiciones separando las temperaturas, para comparar los datos experimentales con los simulados
 
 ```{r comparaciones temperaturas r}
-
+2
 anthocyanins$grouping<-factor(with(anthocyanins,sweetener:processing))
 
 

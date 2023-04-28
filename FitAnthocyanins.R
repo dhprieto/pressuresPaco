@@ -4,6 +4,7 @@ library(ggplot2)
 library(texreg)
 library(nlraa)
 source("scripts/r2adj.R")
+
 #read the data
 presiones1.1 <- read.csv("data/presiones1.csv", sep = ";", dec = ",")
 presiones.l <- gather(presiones1.1, compound, concentration,Delphinidin.3.O.sambubioside.5.O.glucoside:Ac.Dehidroascorbico,factor_key=TRUE)
