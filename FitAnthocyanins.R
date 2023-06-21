@@ -3,6 +3,8 @@ library(tidyr)
 library(ggplot2)
 library(texreg)
 library(nlraa)
+library(nlme)
+library(rstatix)
 source("scripts/r2adj.R")
 
 #read the data
@@ -19,6 +21,11 @@ presiones.l$sweetener<-factor(presiones.l$sweetener)
 presiones.l$processing<-factor(presiones.l$processing)
 presiones.l$rep<-factor(presiones.l$rep)
 presiones.l$compound<-factor(presiones.l$compound,ordered=F)
+
+# tune time
+
+presiones.l$tiempo <- presiones.l$tiempo+ 1.001 
+
 
 # select anthocyanins
 anthocyanins <- presiones.l[which(presiones.l$compound %in% c("Delphinidin.3.O.sambubioside.5.O.glucoside",	
@@ -38,7 +45,6 @@ ggplot(anthocyanins,
 # The differences between colours is much bigger than the differences between the lines of the same colour.
 # 2. all the anthocyanins, except for the Delphinidin.3.5.O.diglucoside could reasonably be modelled with an apparent first order kinetic
 
-library(nlme)
 # the baseline model. Temperature dependence but processing or sweetener don't affect
 ant.fm0<-gnls(concentration~Cinf+(C0-Cinf)*exp(-exp(lk-Ea/8.314e-3*(1/(Temp+273)-1/(16+273)))*tiempo),
               data=anthocyanins,
@@ -96,20 +102,37 @@ ant.fm3<-gnls(concentration~Cinf+(C0-Cinf)*exp(-exp(lk-Ea/8.314e-3*(1/(Temp+273)
                start=c(C0=c(coef(ant.fm0)[1:6],rep(0.001,18)),
                        Cinf=c(coef(ant.fm0)[7:12],rep(0.001,18)),
                        lk=c(coef(ant.fm0)[13:18],rep(0.001,18)),
-                       Ea=c(coef(ant.fm0)[13:18])
-               )
+                       Ea=c(coef(ant.fm0)[19:24],rep(0.001,0))),
 )
+
+ant.fm4<-gnls(concentration~Cinf+(C0-Cinf)*exp(-exp(lk-Ea/8.314e-3*(1/(Temp+273)-1/(16+273)))*tiempo),
+              data=anthocyanins,
+              param=list(C0~compound+compound:sweetener+compound:processing,
+                         Cinf~compound+compound:sweetener+compound:processing,
+                         lk~compound+compound:sweetener+compound:processing,
+                         Ea~1),
+              start=c(C0=c(coef(ant.fm0)[1:6],rep(0.001,18)),
+                      Cinf=c(coef(ant.fm0)[7:12],rep(0.001,18)),
+                      lk=c(coef(ant.fm0)[13:18],rep(0.001,18)),
+                      Ea=c(coef(ant.fm0)[19],rep(0.001,0))),
+)
+
+anova(ant.fm3,ant.fm4)
+
 screenreg(ant.fm3,single.row=T,ci.force=T)
 
-anova(ant.fm0,ant.fm1,ant.fm2,ant.fm3)
-r2(ant.fm3)
+anova(ant.fm0,ant.fm1,ant.fm2,ant.fm3, ant.fm4)
+
+#modelo final:
+ant.fmf <- ant.fm4
+r2(ant.fmf)
 # diagnostic plots
-plot(ant.fm3)
-qqnorm(ant.fm3)
-plot(ant.fm3,resid(.)~Temp)
-plot(ant.fm3,compound~resid(.))
-plot(ant.fm3,processing~resid(.))
-plot(ant.fm3,sweetener~resid(.))
+plot(ant.fmf)
+qqnorm(ant.fmf)
+plot(ant.fmf,resid(.)~Temp)
+plot(ant.fmf,compound~resid(.))
+plot(ant.fmf,processing~resid(.))
+plot(ant.fmf,sweetener~resid(.))
 
 # a nice table, maybe
 list.of.compound.fit<-list()
@@ -117,19 +140,21 @@ list.of.r2adj<-list()
 for (i in levels(factor(anthocyanins$compound))){
   print(i)
   list.of.compound.fit[[i]]<-gnls(concentration~Cinf+(C0-Cinf)*exp(-exp(lk-Ea/8.314e-3*(1/(Temp+273)-1/(16+273)))*tiempo),
-                                  data=subset(anthocyanins,compound==i),
-                                  param=list(C0~sweetener+processing,
-                                             Cinf~sweetener+processing,
-                                             lk~sweetener+processing,
-                                             Ea~1),
-                                  start=c(C0=c(5.05,rep(0.001,3)),
-                                          Cinf=c(0,rep(0.001,3)),
-                                          lk=c(-4.38,rep(0.001,3)),
-                                          Ea=c(67)
+                                  data=anthocyanins,
+                                  param=list(C0~compound+compound:sweetener+compound:processing,
+                                             Cinf~compound+compound:sweetener+compound:processing,
+                                             lk~compound+compound:sweetener+compound:processing,
+                                             Ea~compound),
+                                  start=c(C0=c(coef(ant.fm0)[1:6],rep(0.001,18)),
+                                          Cinf=c(coef(ant.fm0)[7:12],rep(0.001,18)),
+                                          lk=c(coef(ant.fm0)[13:18],rep(0.001,18)),
+                                          Ea=c(coef(ant.fm0)[13:18])
                                   )
   )
   list.of.r2adj[[i]]<-round(r2(list.of.compound.fit[[i]])[2],3)
 }
+
+library(texreg)
 
 screenreg(list.of.compound.fit,single.row=T,ci.force=T)
 
@@ -160,9 +185,9 @@ ant.pred<-expand.grid(tiempo=seq(0,90,length=50),
 ant.pred$sweetener<-factor(with(ant.pred,substr(grouping,0,2)))
 ant.pred$processing<-factor(with(ant.pred,substr(grouping,4,4)))
 ant.pred$Temp<-as.numeric(with(ant.pred,substr(grouping,6,8)))
-ant.pred$concentration<-predict(ant.fm3,newdata = ant.pred)
+ant.pred$concentration<-predict(ant.fmf,newdata = ant.pred)
 
-yhat<-predict_gnls(ant.fm3,newdata=ant.pred,interval="prediction")
+yhat<-predict_gnls(ant.fmf,newdata=ant.pred,interval="confidence")
 
 ant.pred$Q2.5<-yhat[,"Q2.5"]
 ant.pred$Q97.5<-yhat[,"Q97.5"]
@@ -207,3 +232,71 @@ ggsave(filename = "plots/ant.pred~all.pdf")
 #   geom_point()+
 #   xlab("Storage Time [Days]")+ylab("Concentration [mg/100mL]")
 # ggsave(filename="Figure1.pdf")
+
+
+
+# Total SIM ---
+
+ant.SIM <- expand.grid(tiempo=seq(0.001,90,length=50),
+                        compound=levels(factor(anthocyanins$compound)),
+                        Temp=c(4,20),
+                        processing=levels(factor(anthocyanins$processing)),
+                        sweetener=levels(factor(anthocyanins$sweetener))
+)
+
+ant.SIM$grouping <- with(ant.SIM, sweetener:processing:factor(Temp)) 
+
+yhatSIM<-predict_gnls(ant.fm3,newdata=ant.SIM,interval="confidence")
+
+ant.SIM$yhat<-yhatSIM[,"Estimate"]
+ant.SIM$Q2.5<-yhatSIM[,"Q2.5"]
+ant.SIM$Q97.5<-yhatSIM[,"Q97.5"]
+
+## test ----
+
+ggplot(ant.SIM, aes(x=tiempo, y= yhat, col = factor(Temp))) +
+  facet_grid(processing+sweetener~compound, scales ="free") +
+  geom_line()+
+  geom_ribbon(aes(ymax=Q97.5, ymin=Q2.5, y = yhat, fill = factor(Temp)), alpha= 0.1) +
+  geom_point(data=anthocyanins, aes(x=tiempo, y = concentration, fill =factor(Temp)))+
+  xlab("Storage Time [Days]")+ylab("Concentration [mg/100mL]")+
+  ggtitle("Degradation of anthocyanins by processing", 
+          subtitle = "Dots are experimental points")
+
+
+ggplot(filter(ant.SIM, compound == c("Cyanidin.3.O.sambubioside..Cyanidin.3.O.glucoside","Delphinidin.3.O.glucoside") 
+              & processing =="2" & sweetener =="SU"), 
+       aes(x=tiempo, y= yhat, col = factor(Temp))) +
+  facet_wrap(processing:sweetener~compound) +
+  geom_line()+
+  geom_ribbon(aes(ymax=Q97.5, ymin=Q2.5, y = yhat, fill = factor(Temp)), alpha= 0.1) +
+  geom_point(data=filter(anthocyanins,compound == c("Cyanidin.3.O.sambubioside..Cyanidin.3.O.glucoside","Delphinidin.3.O.glucoside") 
+                         & processing =="2" & sweetener =="SU"), aes(x=tiempo, y = concentration, fill =factor(Temp)))+
+  geom_point(data=filter(anthocyanins,compound == c("Delphinidin.3.O.glucoside") 
+                         & processing =="2" & sweetener =="SU"), aes(x=tiempo, y = concentration, fill =factor(Temp)))+
+  xlab("Storage Time [Days]")+ylab("Concentration [mg/100mL]")+
+  ggtitle("Degradation of anthocyanins with SU:2 synergy", 
+          subtitle = "Dots are experimental points") #+ theme(strip.text.x = element_text(size = 15))
+
+ggplot(filter(ant.SIM, compound == c("Cyanidin.3.O.sambubioside.5.O.glucoside...Cyanidin.3.5.O.diglucoside","Delphinidin.3.O.sambubioside.5.O.glucoside") 
+              & processing =="1" & sweetener =="ST"), 
+       aes(x=tiempo, y= yhat, col = factor(Temp))) +
+  facet_wrap(processing:sweetener~compound) +
+  geom_line()+
+  geom_ribbon(aes(ymax=Q97.5, ymin=Q2.5, y = yhat, fill = factor(Temp)), alpha= 0.1) +
+  geom_point(data=filter(anthocyanins,compound == c("Cyanidin.3.O.sambubioside.5.O.glucoside...Cyanidin.3.5.O.diglucoside","Delphinidin.3.O.glucoside") 
+                         & processing =="1" & sweetener =="ST"), aes(x=tiempo, y = concentration, fill =factor(Temp)))+
+  geom_point(data=filter(anthocyanins,compound == c("Delphinidin.3.O.sambubioside.5.O.glucoside") 
+                         & processing =="1" & sweetener =="ST"), aes(x=tiempo, y = concentration, fill =factor(Temp)))+
+  xlab("Storage Time [Days]")+ylab("Concentration [mg/100mL]")+
+  ggtitle("Degradation of anthocyanins with ST:1 synergy", 
+          subtitle = "Dots are experimental points") #+ theme(strip.text.x = element_text(size = 15))
+
+unique(ant.SIM$compound)
+
+# gráfica calidad modelo
+
+ggplot(data.frame(fitted = ant.fm3$fitted, residuals = ant.fm3$residuals), 
+       aes(x=fitted, y=residuals))+geom_point()+geom_smooth(method="loess",se = F)
+
+

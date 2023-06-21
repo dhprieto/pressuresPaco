@@ -1,0 +1,12 @@
+,X.concentration_Ascorbic.,Effect,DFn,DFd,F,p,p..05,ges,X.concentration_Dehydroascorbic.,Effect.1,DFn.1,DFd.1,F.1,p.1,p..05.1,ges.1
+1,concentration_Ascorbic,processing,2,6,0.493,0.634,,0.122,concentration_Dehydroascorbic,processing,2,6,0.32,0.738,,0.082
+2,concentration_Ascorbic,sweetener,1,6,0.426,0.538,,0.057,concentration_Dehydroascorbic,sweetener,1,6,1.592,0.254,,0.181
+3,concentration_Ascorbic,tiempo,49,294,331.795,1.36E-229,*,0.896,concentration_Dehydroascorbic,tiempo,49,294,269.041,1.63E-216,*,0.882
+4,concentration_Ascorbic,processing:sweetener,2,6,0.003,0.997,,0.000843,concentration_Dehydroascorbic,processing:sweetener,2,6,0.004,0.996,,0.001
+5,concentration_Ascorbic,processing:tiempo,98,294,0.461,1,,0.023,concentration_Dehydroascorbic,processing:tiempo,98,294,0.312,1,,0.017
+6,concentration_Ascorbic,sweetener:tiempo,49,294,0.426,1,,0.011,concentration_Dehydroascorbic,sweetener:tiempo,49,294,1.874,0.000846,*,0.05
+7,concentration_Ascorbic,processing:sweetener:tiempo,98,294,0.01,1,,0.000535,concentration_Dehydroascorbic,processing:sweetener:tiempo,98,294,0.022,1,,0.001
+,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,
+,,,,,,1.36E-229,0.997,1,1,,,1.63E-216,1,0.000846,1,
