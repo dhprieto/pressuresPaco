@@ -33,6 +33,8 @@ anthocyanins <- presiones.l[which(presiones.l$compound %in% c("Delphinidin.3.O.s
                                                             "Cyanidin.3.O.sambubioside.5.O.glucoside...Cyanidin.3.5.O.diglucoside",	
                                                             "Delphinidin.3.O.sambubioside",	"Delphinidin.3.O.glucoside",	
                                                             "Cyanidin.3.O.sambubioside..Cyanidin.3.O.glucoside")),]
+write.csv(coef(VitC.fm8), file = "data/coef_VitC.fm8.csv")
+
 
 # first order apparent plot  to study the importance of Temperature
 ggplot(anthocyanins, 
@@ -124,7 +126,7 @@ screenreg(ant.fm3,single.row=T,ci.force=T)
 anova(ant.fm0,ant.fm1,ant.fm2,ant.fm3, ant.fm4)
 
 #modelo final:
-ant.fmf <- ant.fm4
+ant.fmf <- ant.fm3
 r2(ant.fmf)
 # diagnostic plots
 plot(ant.fmf)
