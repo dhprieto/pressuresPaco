@@ -241,6 +241,7 @@ summary(VitC.fm4)
 summary(VitC.fm8)
 
 anova(VitC.fm4,VitC.fm8)
+write.csv(file = "Waldfm3.csv", x =  anova(ant.fm3))
 
 coef(VitC.fm8)
 # Selection of model ----

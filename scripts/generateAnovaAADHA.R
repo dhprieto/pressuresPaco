@@ -171,7 +171,8 @@ VitC.fm8<-gnls(Concentracion~aadha.ldef(Time=tiempo,Species = Species,
 summary(VitC.fm4)
 summary(VitC.fm8)
 
-anova(VitC.fm0,VitC.fm4,VitC.fm8)
+anova(VitC.fm4,VitC.fm8)
+
 VitC.fmF<-VitC.fm8
 
 # simulation ----

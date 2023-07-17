@@ -262,6 +262,9 @@ ggplot.sobolmartinez.custom(ant.fm3.sobol.martinez)+ggtitle("Sobol sensitivity a
 
 saveRDS(ant.fm3.sobol.martinez, file ="results/AntSobol.RDS")
 
+capture.output(ant.fm3.sobol.martinez, file="results/AntindicesSobol.csv")
+
+
 # Vitamin C ----
 
 # reading data
@@ -328,6 +331,7 @@ ggplot.sobolmartinez.custom(VitC.fmF.sobol.martinez)+ggtitle("Sobol sensitivity 
 
 saveRDS(VitC.fmF.sobol.martinez, file ="results/VitCSobol.RDS")
 
+capture.output(VitC.fmF.sobol.martinez, file="results/VitCindicesSobol.csv")
 
 # test ----
 

@@ -33,7 +33,7 @@ anthocyanins <- presiones.l[which(presiones.l$compound %in% c("Delphinidin.3.O.s
                                                             "Cyanidin.3.O.sambubioside.5.O.glucoside...Cyanidin.3.5.O.diglucoside",	
                                                             "Delphinidin.3.O.sambubioside",	"Delphinidin.3.O.glucoside",	
                                                             "Cyanidin.3.O.sambubioside..Cyanidin.3.O.glucoside")),]
-write.csv(coef(VitC.fm8), file = "data/coef_VitC.fm8.csv")
+write.csv(anthocyanins, file = "data/anthocyanins_longFormat.csv")
 
 
 # first order apparent plot  to study the importance of Temperature
@@ -119,7 +119,7 @@ ant.fm4<-gnls(concentration~Cinf+(C0-Cinf)*exp(-exp(lk-Ea/8.314e-3*(1/(Temp+273)
                       Ea=c(coef(ant.fm0)[19],rep(0.001,0))),
 )
 
-anova(ant.fm3,ant.fm4)
+anova(ant.fm4,ant.fm3)
 
 screenreg(ant.fm3,single.row=T,ci.force=T)
 
@@ -142,7 +142,7 @@ list.of.r2adj<-list()
 for (i in levels(factor(anthocyanins$compound))){
   print(i)
   list.of.compound.fit[[i]]<-gnls(concentration~Cinf+(C0-Cinf)*exp(-exp(lk-Ea/8.314e-3*(1/(Temp+273)-1/(16+273)))*tiempo),
-                                  data=anthocyanins,
+                                  data=subset(anthocyanins, compound == i),
                                   param=list(C0~compound+compound:sweetener+compound:processing,
                                              Cinf~compound+compound:sweetener+compound:processing,
                                              lk~compound+compound:sweetener+compound:processing,
@@ -255,7 +255,7 @@ ant.SIM$Q2.5<-yhatSIM[,"Q2.5"]
 ant.SIM$Q97.5<-yhatSIM[,"Q97.5"]
 
 ## test ----
-
+library(ggplot2)
 ggplot(ant.SIM, aes(x=tiempo, y= yhat, col = factor(Temp))) +
   facet_grid(processing+sweetener~compound, scales ="free") +
   geom_line()+
@@ -265,6 +265,12 @@ ggplot(ant.SIM, aes(x=tiempo, y= yhat, col = factor(Temp))) +
   ggtitle("Degradation of anthocyanins by processing", 
           subtitle = "Dots are experimental points")
 
+ggplot(ant.SIM, aes(x=tiempo, y= yhat, col = sweetener )) +
+  facet_grid(factor(Temp)+processing~compound, scales ="free") +
+  geom_line()+
+  geom_ribbon(aes(ymax=Q97.5, ymin=Q2.5, y = yhat, fill = sweetener), alpha= 0.1) +
+  geom_point(data=anthocyanins, aes(x=tiempo, y = concentration, fill =sweetener))+
+  xlab("Storage Time [Days]")+ylab("Concentration [mg/100mL]")
 
 ggplot(filter(ant.SIM, compound == c("Cyanidin.3.O.sambubioside..Cyanidin.3.O.glucoside","Delphinidin.3.O.glucoside") 
               & processing =="2" & sweetener =="SU"), 
