@@ -203,7 +203,7 @@ VitC.fm4<-gnls(Concentracion~aadha.ldef(Time=tiempo,Species = Species,
                                         k2=exp(lk2-Ea/8.314e-3*(1/(Temp+273)-1/(16+273))),
                                         k3=exp(lk3-Ea/8.314e-3*(1/(Temp+273)-1/(16+273))),
                                         aa0=exp(laa0),dhaa0=exp(ldhaa0)),
-               data=VitC.l,
+               data=subset(VitC.l, Species == "Ascorbic" & rep == "rep1"),
                weights=varIdent(~1|Species),
                control=nls.control(maxiter=200),
                params=list(lk1~1,Ea~1,lk2~1,lk3~sweetener,
@@ -239,6 +239,8 @@ VitC.fm8<-gnls(Concentracion~aadha.ldef(Time=tiempo,Species = Species,
 
 summary(VitC.fm4)
 summary(VitC.fm8)
+
+r2(VitC.fm8)
 
 anova(VitC.fm4,VitC.fm8)
 write.csv(file = "Waldfm3.csv", x =  anova(ant.fm3))
@@ -353,32 +355,34 @@ VitC.SIM <- expand.grid(tiempo=seq(0,90,length=50),
 )
 
 
-yhatSIM<-predict_gnls(VitC.fmF,newdata=VitC.SIM,interval="confidence")
+yhatSIM<-predict_gnls(VitC.fm8,newdata=VitC.SIM,interval="confidence")
 
-VitC.SIM$concentration<-yhatSIM[,"Estimate"]
+VitC.SIM$yhat<-yhatSIM[,"Estimate"]
 VitC.SIM$Q2.5<-yhatSIM[,"Q2.5"]
 VitC.SIM$Q97.5<-yhatSIM[,"Q97.5"]
+VitC.fm8
 
 ## test ----
+
+
+lm_test <- lm(log10(yhat)~tiempo, data = VitC.SIM[VitC.SIM$sweetener == "ST",])
+
 
 ggplot(VitC.SIM, aes(x=tiempo, y= yhat, col = processing)) +
   facet_grid(Species~factor(Temp)+sweetener, scales ="free") +
   geom_line()+
   geom_ribbon(aes(ymax=Q97.5, ymin=Q2.5, y = yhat, fill = processing), alpha= 0.1) +
   geom_point(data=VitC.l, aes(x=tiempo, y = Concentracion, fill =processing))+
-  xlab("Storage Time [Days]")+ylab("Concentration [mg/100mL]")+
-  ggtitle("Degradation of Vitamin C by processing", 
-          subtitle = "Dots are experimental points")
-
+  xlab("Storage Time [Days]")+ylab("log10(Concentration) [mg/100mL]")+
+  scale_y_continuous(trans = "log10") 
 
 ggplot(VitC.SIM, aes(x=tiempo, y= yhat, col = sweetener)) +
   facet_grid(Species~factor(Temp)+processing, scales ="free") +
   geom_line()+
   geom_ribbon(aes(ymax=Q97.5, ymin=Q2.5, y = yhat, fill = sweetener), alpha= 0.1) +
   geom_point(data=VitC.l, aes(x=tiempo, y = Concentracion, fill =sweetener))+
-  xlab("Storage Time [Days]")+ylab("Concentration [mg/100mL]")+
-  ggtitle("Degradation of Vitamin C by sweetener", 
-          subtitle = "Dots are experimental points")
+  xlab("Storage Time [Days]")+ylab("log10(Concentration) [mg/100mL]")+
+  scale_y_continuous(trans = "log10")
 
 summary(VitC.fmF)
 

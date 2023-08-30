@@ -118,6 +118,7 @@ ant.fm4<-gnls(concentration~Cinf+(C0-Cinf)*exp(-exp(lk-Ea/8.314e-3*(1/(Temp+273)
                       lk=c(coef(ant.fm0)[13:18],rep(0.001,18)),
                       Ea=c(coef(ant.fm0)[19],rep(0.001,0))),
 )
+r2(ant.fm4)
 
 anova(ant.fm4,ant.fm3)
 
@@ -247,7 +248,7 @@ ant.SIM <- expand.grid(tiempo=seq(0.001,90,length=50),
 )
 
 ant.SIM$grouping <- with(ant.SIM, sweetener:processing:factor(Temp)) 
-
+require(nlraa)
 yhatSIM<-predict_gnls(ant.fm3,newdata=ant.SIM,interval="confidence")
 
 ant.SIM$yhat<-yhatSIM[,"Estimate"]
@@ -256,14 +257,12 @@ ant.SIM$Q97.5<-yhatSIM[,"Q97.5"]
 
 ## test ----
 library(ggplot2)
-ggplot(ant.SIM, aes(x=tiempo, y= yhat, col = factor(Temp))) +
+ggplot(ant.SIM, aes(x=tiempo, y= log(yhat), col = factor(Temp))) +
   facet_grid(processing+sweetener~compound, scales ="free") +
   geom_line()+
   geom_ribbon(aes(ymax=Q97.5, ymin=Q2.5, y = yhat, fill = factor(Temp)), alpha= 0.1) +
   geom_point(data=anthocyanins, aes(x=tiempo, y = concentration, fill =factor(Temp)))+
-  xlab("Storage Time [Days]")+ylab("Concentration [mg/100mL]")+
-  ggtitle("Degradation of anthocyanins by processing", 
-          subtitle = "Dots are experimental points")
+  xlab("Storage Time [Days]")+ylab("Concentration [mg/100mL]")
 
 ggplot(ant.SIM, aes(x=tiempo, y= yhat, col = sweetener )) +
   facet_grid(factor(Temp)+processing~compound, scales ="free") +
@@ -272,19 +271,32 @@ ggplot(ant.SIM, aes(x=tiempo, y= yhat, col = sweetener )) +
   geom_point(data=anthocyanins, aes(x=tiempo, y = concentration, fill =sweetener))+
   xlab("Storage Time [Days]")+ylab("Concentration [mg/100mL]")
 
-ggplot(filter(ant.SIM, compound == c("Cyanidin.3.O.sambubioside..Cyanidin.3.O.glucoside","Delphinidin.3.O.glucoside") 
-              & processing =="2" & sweetener =="SU"), 
+library(dplyr)
+
+ggplot(filter(ant.SIM, compound %in% c("Delphinidin.3.O.glucoside") 
+              & (processing == "2" & sweetener == "SU")), 
        aes(x=tiempo, y= yhat, col = factor(Temp))) +
   facet_wrap(processing:sweetener~compound) +
   geom_line()+
   geom_ribbon(aes(ymax=Q97.5, ymin=Q2.5, y = yhat, fill = factor(Temp)), alpha= 0.1) +
-  geom_point(data=filter(anthocyanins,compound == c("Cyanidin.3.O.sambubioside..Cyanidin.3.O.glucoside","Delphinidin.3.O.glucoside") 
-                         & processing =="2" & sweetener =="SU"), aes(x=tiempo, y = concentration, fill =factor(Temp)))+
-  geom_point(data=filter(anthocyanins,compound == c("Delphinidin.3.O.glucoside") 
-                         & processing =="2" & sweetener =="SU"), aes(x=tiempo, y = concentration, fill =factor(Temp)))+
-  xlab("Storage Time [Days]")+ylab("Concentration [mg/100mL]")+
-  ggtitle("Degradation of anthocyanins with SU:2 synergy", 
-          subtitle = "Dots are experimental points") #+ theme(strip.text.x = element_text(size = 15))
+  geom_point(data=filter(anthocyanins, compound %in% c("Delphinidin.3.O.glucoside") 
+                         &(processing == "2" & sweetener == "SU")), 
+             aes(x=tiempo, y = concentration, fill =factor(Temp)))+
+  xlab("Storage Time [Days]")+ylab("log(Concentration) [mg/100mL]")
+
+
+ggplot(filter(ant.SIM, compound %in% c("Cyanidin.3.O.sambubioside.5.O.glucoside...Cyanidin.3.5.O.diglucoside","Delphinidin.3.O.sambubioside.5.O.glucoside") 
+              & ((processing == "2" & sweetener == "SU") | (processing == "1" & sweetener == "ST"))), 
+       aes(x=tiempo, y= yhat, col = factor(Temp))) +
+  facet_wrap(processing:sweetener~compound) +
+  geom_line()+
+  geom_ribbon(aes(ymax=Q97.5, ymin=Q2.5, y = yhat, fill = factor(Temp)), alpha= 0.1) +
+  geom_point(data=filter(anthocyanins, compound %in% c("Cyanidin.3.O.sambubioside.5.O.glucoside...Cyanidin.3.5.O.diglucoside","Delphinidin.3.O.sambubioside.5.O.glucoside") 
+                         & ((processing == "2" & sweetener == "SU") | (processing == "1" & sweetener == "ST"))), 
+             aes(x=tiempo, y = concentration, fill =factor(Temp)))+
+  
+  xlab("Storage Time [Days]")+ylab("log(Concentration) [mg/100mL]")
+
 
 ggplot(filter(ant.SIM, compound == c("Cyanidin.3.O.sambubioside.5.O.glucoside...Cyanidin.3.5.O.diglucoside","Delphinidin.3.O.sambubioside.5.O.glucoside") 
               & processing =="1" & sweetener =="ST"), 
@@ -292,15 +304,15 @@ ggplot(filter(ant.SIM, compound == c("Cyanidin.3.O.sambubioside.5.O.glucoside...
   facet_wrap(processing:sweetener~compound) +
   geom_line()+
   geom_ribbon(aes(ymax=Q97.5, ymin=Q2.5, y = yhat, fill = factor(Temp)), alpha= 0.1) +
-  geom_point(data=filter(anthocyanins,compound == c("Cyanidin.3.O.sambubioside.5.O.glucoside...Cyanidin.3.5.O.diglucoside","Delphinidin.3.O.glucoside") 
+  geom_point(data=filter(anthocyanins, compound == c("Cyanidin.3.O.sambubioside.5.O.glucoside...Cyanidin.3.5.O.diglucoside","Delphinidin.3.O.glucoside") 
                          & processing =="1" & sweetener =="ST"), aes(x=tiempo, y = concentration, fill =factor(Temp)))+
-  geom_point(data=filter(anthocyanins,compound == c("Delphinidin.3.O.sambubioside.5.O.glucoside") 
+  geom_point(data=filter(anthocyanins, compound == c("Delphinidin.3.O.sambubioside.5.O.glucoside") 
                          & processing =="1" & sweetener =="ST"), aes(x=tiempo, y = concentration, fill =factor(Temp)))+
   xlab("Storage Time [Days]")+ylab("Concentration [mg/100mL]")+
   ggtitle("Degradation of anthocyanins with ST:1 synergy", 
           subtitle = "Dots are experimental points") #+ theme(strip.text.x = element_text(size = 15))
 
-unique(ant.SIM$compound)
+
 
 # gráfica calidad modelo
 

@@ -129,7 +129,7 @@ for (i in levels(factor(VitC.l$Species))){
                               k2=exp(lk2-Ea/8.314e-3*(1/(Temp+273)-1/(16+273))),
                               k3=exp(lk3-Ea/8.314e-3*(1/(Temp+273)-1/(16+273))),
                               aa0=exp(laa0),dhaa0=exp(ldhaa0)),
-     data=VitC.l,
+     data=subset(VitC.l, Species==i),
      weights=varIdent(~1|Species),
      control=nls.control(maxiter=200),
      params=list(lk1~1,Ea~1,lk2~processing+sweetener,lk3~processing+sweetener,
@@ -144,6 +144,8 @@ for (i in levels(factor(VitC.l$Species))){
   
   list.of.r2adj[[i]]<-round(r2(list.of.compound.fit[[i]])[2],3)
 }
+
+subset(VitC.l, Species=="Ascorbic" & rep == "rep1")
 
 screenreg(list.of.compound.fit,single.row=T,ci.force=T)
 

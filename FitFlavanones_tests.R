@@ -7,8 +7,9 @@ library(ggplot2)
 library(texreg)
 library(nlme)
 library(nlraa)
-library(nls2)
-library(aomisc)
+# library(nls2)
+# library(aomisc)
+
 
 source("scripts/r2adj.R")
 
@@ -49,18 +50,14 @@ ggplot(flavanones,
   xlab("Storage Time [Days]")+ylab("Concentration mg/100mL)")
 
 
+
 getInitial(concentration ~ SSweibull(tiempoPLus, Asym, Drop, lrc, pwr), data = flavanones)
 
 
 flav.weibull <- nls2(concentration ~ SSweibull(tiempoPLus, Asym, Drop, lrc, pwr), data = flavanones)
-
-
 fit1 <- nls(concentration ~ SSweibull(tiempo+1.1, Asym, Drop, lcr, pwr), data = flavanones)
 
-
 # ajuste gnls ----
-
-
 model <- drm(concentration ~ tiempoPLus, fct = W2.4(), data = flavanones)
 
 coef(model)
@@ -239,14 +236,14 @@ flav.fm5<-gnls(concentration~SSweibull(tiempoPLus, Asym, Drop, lrc=-19.84387002,
 
 coef(flav.fm5)
 anova(flav.fm5)
-anova(flav.fm0,flav.fm1,flav.fm2,flav.fm3,flav.fm4, flav.fm5)
-
+anova(flav.fm0,flav.fm1,flav.fm2,flav.fm3,flav.fm4)
+r2(flav.fm1)
 coef(flav.fm4)
 
 flav.sim<-rbind(flavanones,flavanones,flavanones,flavanones)
 flav.sim$tiempoPLus<-runif(144*4,0.001,91.001)
 
-flav.sim$yhat<-predict(flav.fm4,newdata=flav.sim)
+flav.sim$yhat<-predict(flav.fm1,newdata=flav.sim)
 
 ggplot(flavanones, aes(x=tiempoPLus, y= concentration, col = processing)) +
   facet_grid(compound~factor(Temp)+sweetener, scales ="free") +
