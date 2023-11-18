@@ -4,6 +4,7 @@ library(dplyr)
 library(caret)
 library(ggplot2)
 library(reshape2)
+library(xgboost)
 
 # functions ----
 
@@ -98,27 +99,39 @@ levels(flavPred.m1$Temp)<-c(20,4,20,4,20,4)
 flavaPredDef <- rbind(flavPred.m1, flavPred)
 
 flavanonesNorm.l <- melt(flavanonesNorm)
+flavanonesNorm.l$tiempo <- as.numeric(flavanonesNorm.l$tiempo)
+
 
 flavPred.l <- melt(flavaPredDef)
-
+flavPred.l$tiempo <- as.numeric(flavPred.l$tiempo) 
 
 ggplot(flavPred.l, aes(x = tiempo, y = value, col= processing)) +
   facet_wrap(variable~sweetener,scales="free")+
-  geom_point()+geom_smooth(method="lm", se=F)+
+  geom_point()+geom_smooth(method="loess", se=F)+
   xlab("Storage Time [Days]")+ylab("Concentration [normalized value]")
 
+flavPred.l$processing <- factor(flavPred.l$processing)
+levels(flavPred.l$processing) <- c("high pressures 1", "high pressures 2", "thermal")
 
-ggplot(flavPred.l %>% filter(Temp == "20"), aes(x = tiempo, y = value, col= processing)) +
+flavanonesNorm.l$processing <- factor(flavanonesNorm.l$processing)
+levels(flavanonesNorm.l$processing) <- c("high pressures 1", "high pressures 2", "thermal")
+
+ggplot(flavPred.l %>% filter(Temp == "20" & variable == "Eriodyctiol.7.O.rutinoside"), aes(x = tiempo, y = value, col= processing)) +
   facet_wrap(variable~sweetener,scales="free")+
-  geom_point()+
-  geom_point(data = flavanonesNorm.l %>% filter(Temp == "4"), aes(x= tiempo, y = value), shape=4)+
+  geom_point()+geom_smooth(method="loess", se=F)+
+  geom_point(data = flavanonesNorm.l %>% filter(Temp == "4" & variable == "Eriodyctiol.7.O.rutinoside"), aes(x= tiempo, y = value), shape=4)+
+  geom_smooth(method="loess", se=F)+
   xlab("Storage Time [Days]")+ylab("Concentration [normalized value]")+
-  ggtitle("Predictions on flavanones degradation at 20ºC | Crosses = experimental values at 4ºC")
+  ggtitle("Predictions on flavanones degradation at 20ºC | Crosses = experimental values at 4ºC")+
+  theme(title = element_text(size=16, face="bold"),
+        axis.title=element_text(size=20,face="bold"),
+        legend.text = element_text(size=14))
 
 
-ggplot(flavPredN.l %>% filter(Temp == "4"), aes(x = tiempo, y = value, col= processing)) +
+ggplot(flavPred.l %>% filter(Temp == "4"), aes(x = tiempo, y = value, col= processing)) +
   facet_wrap(variable~sweetener,scales="free")+
-  geom_point()+geom_smooth(method="lm", se=F)+
+  geom_point()+geom_smooth(method="loess", se=F)+
+  geom_point(data = flavanonesNorm.l %>% filter(Temp == "20"), aes(x= tiempo, y = value), shape=4)+
   xlab("Storage Time [Days]")+ylab("Concentration [normalized value]")+
   ggtitle("Predictions on flavanones degradation at 4ºC")
 
