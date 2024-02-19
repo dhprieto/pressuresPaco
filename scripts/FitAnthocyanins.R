@@ -177,7 +177,6 @@ anthocyanins$Temp <- factor(anthocyanins$Temp)
 levels(anthocyanins$Temp) <- c(20,4,20,4,20,4)
 anthocyanins$Temp<-as.numeric(as.character(anthocyanins$Temp))
 
-  
 anthocyanins$grouping<-with(anthocyanins,sweetener:processing:factor(Temp))
 
 ant.pred<-expand.grid(tiempo=seq(0,90,length=50),
